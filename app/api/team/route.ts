@@ -1,15 +1,15 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
   const params = request.nextUrl.searchParams;
 
   return NextResponse.json(
     {
-      test: params.get("test"),
+      test: params.get('test'),
     },
     {
       status: 200,
-    }
+    },
   );
 }
 
@@ -42,10 +42,10 @@ export async function DELETE(request: NextRequest) {
 
   return NextResponse.json(
     {
-      test: params.get("test"),
+      test: params.get('test'),
     },
     {
       status: 204,
-    }
+    },
   );
 }
