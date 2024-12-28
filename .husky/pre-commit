@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+. "$(dirname -- "$0")/_/husky.sh"
 
-npm.cmd run format
-npm.cmd run lint
+npm run format
+npm run lint
