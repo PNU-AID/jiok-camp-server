@@ -1,51 +1,112 @@
 import { NextRequest, NextResponse } from 'next/server';
+import prisma from '@/prisma/prisma';
 
-export async function GET(request: NextRequest) {
-  const params = request.nextUrl.searchParams;
-
-  return NextResponse.json(
-    {
-      test: params.get('test'),
-    },
-    {
-      status: 200,
-    },
-  );
-}
-
+// Create Team
 export async function POST(request: NextRequest) {
-  const body = await request.json();
+  try {
+    const body = await request.json();
+    const { login_id, password, role } = body;
 
-  return NextResponse.json(body, {
-    status: 201,
-  });
+    const user = await prisma.user.create({
+      data: {
+        login_id,
+        password,
+        role,
+      },
+    });
+
+    return NextResponse.json(user, {
+      status: 201,
+    });
+  } catch (error: unknown) {
+    console.log(JSON.stringify(error));
+
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 },
+    );
+  }
 }
 
-export async function PUT(request: NextRequest) {
-  const body = await request.json();
+// Read Teams
+export async function GET() {
+  try {
+    const users = await prisma.user.findMany({});
 
-  return NextResponse.json(body, {
-    status: 201,
-  });
+    return NextResponse.json(users, { status: 200 });
+  } catch (error: unknown) {
+    console.log(JSON.stringify(error));
+
+    return NextResponse.json(
+      { error: 'Failed to fetch users' },
+      { status: 500 },
+    );
+  }
 }
 
-export async function PATCH(request: NextRequest) {
-  const body = await request.json();
-
-  return NextResponse.json(body, {
-    status: 201,
-  });
-}
-
+// Delete Team
 export async function DELETE(request: NextRequest) {
-  const params = request.nextUrl.searchParams;
+  try {
+    const params = request.nextUrl.searchParams;
+    const userId = params.get('id');
 
-  return NextResponse.json(
-    {
-      test: params.get('test'),
-    },
-    {
-      status: 204,
-    },
-  );
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 },
+      );
+    }
+
+    const deletedUser = await prisma.user.delete({
+      where: {
+        id: parseInt(userId, 10),
+      },
+    });
+
+    return NextResponse.json(deletedUser, { status: 200 });
+  } catch (error: unknown) {
+    console.log(JSON.stringify(error));
+
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 },
+    );
+  }
+}
+
+// Update Team password or name
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    const { id, login_id, newPassword } = body;
+
+    if (!login_id || !newPassword) {
+      return NextResponse.json(
+        { error: 'User ID and new password are required' },
+        { status: 400 },
+      );
+    }
+
+    const updatedUser = await prisma.user.update({
+      where: {
+        id: id,
+      },
+      data: {
+        login_id: login_id,
+        password: newPassword,
+      },
+    });
+
+    return NextResponse.json(
+      { message: 'Password updated successfully', user: updatedUser },
+      { status: 200 }, // OK
+    );
+  } catch (error: unknown) {
+    console.log(JSON.stringify(error));
+
+    return NextResponse.json(
+      { error: 'An unexpected error occurred' },
+      { status: 500 },
+    );
+  }
 }
