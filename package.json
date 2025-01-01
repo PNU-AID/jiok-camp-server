@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --cache --write .",
-    "postinstall": "husky install"
+    "postinstall": "husky install",
+    "migrate": "npx prisma migrate deploy"
   },
   "dependencies": {
     "@prisma/client": "^6.1.0",
