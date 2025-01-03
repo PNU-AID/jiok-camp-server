@@ -1,17 +1,21 @@
 import { NextRequest, NextResponse } from 'next/server';
-import prisma from '@/prisma/prisma';
+import { prisma } from '@/prisma/prisma';
+import { hashingPassword } from '@/libs/hasing';
+import { auth } from '@/libs/auth';
 
 // Create Team
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { login_id, password, role } = body;
+    const { login_id, password } = body;
+
+    const hashedPw = await hashingPassword(password);
 
     const user = await prisma.user.create({
       data: {
         login_id,
-        password,
-        role,
+        password: hashedPw,
+        role: 'TEAM',
       },
     });
 
@@ -30,10 +34,33 @@ export async function POST(request: NextRequest) {
 
 // Read Teams
 export async function GET() {
+  const session = await auth();
+  console.log('login user info: ', session);
   try {
-    const users = await prisma.user.findMany({});
+    // 로그인되지 않았을 때
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 },
+      );
+    }
 
-    return NextResponse.json(users, { status: 200 });
+    // 로그인한 유저가 관리자일 때
+    if (session?.user.role === 'ADMIN') {
+      const users = await prisma.user.findMany({});
+
+      return NextResponse.json(users, { status: 200 });
+    } else {
+      // 로그인한 유저가 일반유저(TEAM)일 때
+      return NextResponse.json(
+        {
+          message: '관리자만 이용할 수 있습니다.',
+        },
+        { status: 403 },
+      );
+    }
   } catch (error: unknown) {
     console.log(JSON.stringify(error));
 
