@@ -8,9 +8,12 @@ export default {
   ],
   theme: {
     extend: {
+      borderWidth: {
+        '0.5': '0.5px',
+      },
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        'aid-blue': '#237feb',
+        'line-gray': '#7b7b7b',
       },
       fontFamily: {
         baloo: ['var(--Baloo)'],
