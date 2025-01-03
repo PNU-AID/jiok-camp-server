@@ -26,7 +26,6 @@ const handler = NextAuth({
           );
 
           const user = await res.json();
-          console.log('user:', user);
           return user || null;
         } catch (e) {
           console.error(e);
@@ -37,20 +36,18 @@ const handler = NextAuth({
   ],
   session: {
     strategy: 'jwt',
-    maxAge: 30 * 24 * 60 * 60,
+    maxAge: 24 * 60 * 60,
   },
   callbacks: {
     async jwt({ token, user }) {
-      console.log('in token:', user);
       return { ...token, ...user };
     },
     async session({ session, token }) {
-      console.log('$$$ token: ', token);
       session.user = token as any;
-      console.log('$$$ session: ', session);
       return session;
     },
   },
+  secret: process.env.AUTH_SECRET,
 });
 
 export const { handlers, auth, signIn, signOut } = handler;

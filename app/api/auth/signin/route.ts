@@ -1,5 +1,5 @@
+import { comparePassword } from '@/libs/hasing';
 import { prisma } from '@/prisma/prisma';
-// import * as bcrypt from 'bcrypt';
 
 interface RequestBody {
   teamname: string;
@@ -8,20 +8,26 @@ interface RequestBody {
 
 export async function POST(request: Request) {
   const body: RequestBody = await request.json();
-  console.log(body);
   const user = await prisma.user.findUnique({
     where: {
       login_id: body.teamname,
     },
   });
 
-  if (user && body.password === user.password) {
-    const result = {
+  if (user && (await comparePassword(body.password, user?.password ?? ''))) {
+    const userObj = {
       id: user.id,
       teamname: user.login_id,
       role: user.role,
     };
-    console.log(user);
-    return new Response(JSON.stringify(result));
+
+    // const accessToken = signJwtAccessToken(userObj);
+
+    return new Response(
+      JSON.stringify({
+        ...userObj,
+        // accessToken,
+      }),
+    );
   } else return new Response(JSON.stringify(null));
 }
