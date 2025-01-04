@@ -1,6 +1,7 @@
 'use client';
 
 import AidTop from '@/components/AidTop';
+import Rank from '@/components/Rank';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
@@ -18,6 +19,7 @@ export default function Home() {
   return (
     <div className="flex flex-col py-12">
       <AidTop user={session?.user} />
+      <Rank user={session?.user} />
     </div>
   );
 }
