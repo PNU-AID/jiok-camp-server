@@ -1,12 +1,11 @@
 'use client';
 
-import { signIn, signOut, useSession } from 'next-auth/react';
+import { UserInfo } from '@/types/next-auth';
+import { signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
-export default function AidTop() {
-  const { data: session } = useSession();
-
+export default function AidTop(props: { user: UserInfo | undefined }) {
   const [teamname, setTeamname] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -27,18 +26,14 @@ export default function AidTop() {
     }
   };
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-
   return (
-    <section className="flex justify-between pt-10">
+    <section className="flex items-center justify-between pt-10">
       <div className="flex flex-col items-start gap-2">
         <h1 className="text-9xl font-black md:text-8xl">
-          {session
-            ? session.user.role === 'ADMIN'
+          {props.user
+            ? props.user.role === 'ADMIN'
               ? 'ADMIN'
-              : session.user.teamname
+              : props.user.teamname
             : 'AID'}
         </h1>
         <h6 className="text-xl md:text-lg md:font-bold">
@@ -49,7 +44,7 @@ export default function AidTop() {
           <br />
           얼마 남지않은 6공학관, 잊지 말아주세요!
         </p>
-        {session && session.user ? (
+        {props.user ? (
           <Link
             target="_blank"
             href="https://aidpnu.notion.site/AID-AI-Developer-11ef0e0d194f8108951efc1bce4b42fc?pvs=74"
@@ -59,7 +54,7 @@ export default function AidTop() {
           </Link>
         ) : undefined}
       </div>
-      {session && session.user ? (
+      {props.user ? (
         <div>
           <button onClick={() => signOut()}>로그아웃</button>
         </div>
@@ -67,7 +62,7 @@ export default function AidTop() {
         <div className="flex flex-col gap-2.5 px-5 py-10">
           <h2 className="text-2xl font-bold">로그인</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-2.5">
-            <div className="border-line-gray border-0.5 w-[256px] px-4 py-2">
+            <div className="w-[256px] border-0.5 border-line-gray px-4 py-2">
               <input
                 className="w-full text-xs"
                 type="text"
@@ -79,7 +74,7 @@ export default function AidTop() {
                 required
               />
             </div>
-            <div className="border-line-gray border-0.5 w-[256px] px-4 py-2">
+            <div className="w-[256px] border-0.5 border-line-gray px-4 py-2">
               <input
                 className="w-full text-xs"
                 type="password"

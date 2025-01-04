@@ -1,5 +1,15 @@
 import NextAuth from 'next-auth';
 
+export interface UserInfo {
+  id: string;
+  teamname: string;
+  role: string;
+  exp: number;
+  iat: number;
+  jti: string;
+  sub: string;
+}
+
 export declare module 'next-auth' {
   interface User {
     id: number;
@@ -8,15 +18,7 @@ export declare module 'next-auth' {
   }
 
   interface Session {
-    user: {
-      id: string;
-      teamname: string;
-      role: string;
-      exp: number;
-      iat: number;
-      jti: string;
-      sub: string;
-    };
+    user: UserInfo;
   }
 }
 
