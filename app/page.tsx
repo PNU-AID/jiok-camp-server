@@ -2,6 +2,7 @@
 
 import AidTop from '@/components/AidTop';
 import Rank from '@/components/Rank';
+import Submit from '@/components/Submit';
 import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
@@ -17,9 +18,10 @@ export default function Home() {
 
   // session 로딩 완료, session !== undefined
   return (
-    <div className="flex flex-col py-12">
+    <div className="flex flex-col gap-24 py-12">
       <AidTop user={session?.user} />
       <Rank user={session?.user} />
+      <Submit user={session?.user} />
     </div>
   );
 }

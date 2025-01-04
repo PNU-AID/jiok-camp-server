@@ -29,7 +29,9 @@ export default function AidTop(props: { user: UserInfo | undefined }) {
   return (
     <section className="flex items-center justify-between pt-10">
       <div className="flex flex-col items-start gap-2">
-        <h1 className="text-9xl font-black md:text-8xl">
+        <h1
+          className={`text-9xl font-black md:text-8xl ${props.user && props.user.role === 'ADMIN' ? 'text-aid-red' : ''}`}
+        >
           {props.user
             ? props.user.role === 'ADMIN'
               ? 'ADMIN'

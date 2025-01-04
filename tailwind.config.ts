@@ -13,6 +13,7 @@ export default {
       },
       colors: {
         'aid-blue': '#237feb',
+        'aid-red': '#dc4430',
         'line-gray': '#7b7b7b',
       },
       fontFamily: {
