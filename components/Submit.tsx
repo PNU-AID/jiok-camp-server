@@ -61,7 +61,14 @@ export default function Submit(props: { user: UserInfo | undefined }) {
 
   return (
     <div className="flex w-full flex-col gap-2.5">
-      <h1 className="text-2xl font-black">SUBMIT 📃</h1>
+      <div className="flex w-full justify-between">
+        <h1 className="text-2xl font-black">SUBMIT 📃</h1>
+        {props.user.role === 'TEAM' ? (
+          <button className="bg-aid-blue px-5 py-1 font-medium text-white">
+            CSV 제출하기
+          </button>
+        ) : undefined}
+      </div>
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5 font-bold">
           <h3 className="w-32 text-center">제출시각</h3>
