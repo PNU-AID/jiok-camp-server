@@ -49,7 +49,12 @@ export async function GET() {
 
     // 로그인한 유저가 관리자일 때
     if (session?.user.role === 'ADMIN') {
-      const users = await prisma.user.findMany({});
+      const users = await prisma.user.findMany({
+        select: {
+          id: true,
+          login_id: true,
+        },
+      });
 
       return NextResponse.json(users, { status: 200 });
     } else {
@@ -107,9 +112,26 @@ export async function PUT(request: NextRequest) {
     const body = await request.json();
     const { id, login_id, newPassword } = body;
 
-    if (!login_id || !newPassword) {
+    if (!id) {
       return NextResponse.json(
-        { error: 'User ID and new password are required' },
+        { error: 'User ID is required' },
+        { status: 400 },
+      );
+    }
+
+    // null이 들어와도 처리되도록 수정
+    const updateData: any = {};
+    if (login_id) {
+      updateData.login_id = login_id;
+    }
+    if (newPassword) {
+      updateData.password = await hashingPassword(newPassword);
+    }
+
+    // 수정하려는 데이터가 들어오지 않았을 때
+    if (Object.keys(updateData).length === 0) {
+      return NextResponse.json(
+        { error: 'No valid fields to update' },
         { status: 400 },
       );
     }
@@ -118,16 +140,10 @@ export async function PUT(request: NextRequest) {
       where: {
         id: id,
       },
-      data: {
-        login_id: login_id,
-        password: newPassword,
-      },
+      data: updateData,
     });
 
-    return NextResponse.json(
-      { message: 'Password updated successfully', user: updatedUser },
-      { status: 200 }, // OK
-    );
+    return NextResponse.json(updatedUser, { status: 201 });
   } catch (error: unknown) {
     console.log(JSON.stringify(error));
 

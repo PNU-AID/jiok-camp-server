@@ -1,28 +1,122 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/prisma/prisma';
+import { auth } from '@/libs/auth';
+import fs from 'fs';
+import path from 'path';
 
 // Submit csv
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
-    const { filename, user_id, selected, private_score, public_score } = body;
+    const formData = await request.formData();
+    const file = formData.get('file'); // CSV 파일
+    const session = await auth();
+    const id = session?.user.id; // TEXT
 
-    if (
-      !filename ||
-      !user_id ||
-      private_score === undefined ||
-      public_score === undefined
-    ) {
+    if (!file || !id) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'File or ID is missing' },
         { status: 400 },
       );
     }
 
+    // 파일이 실제로 File 타입인지 확인
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
+    }
+
+    // 파일명 - 시간 설정
+    const now = new Date();
+    now.setHours(now.getHours() + 9); // UTC 시간 수정
+    const timestamp = now
+      .toISOString()
+      .replace(/[-T:.Z]/g, '')
+      .slice(0, 14);
+    const filename = `${timestamp}-${id}.csv`;
+
+    // 제출한 csv 경로 설정
+    const csvDir = path.join(process.cwd(), 'csv');
+    const answerFilePath = path.join(csvDir, filename);
+
+    // csv 폴더가 없다면 생성
+    if (!fs.existsSync(path.dirname(csvDir))) {
+      fs.mkdirSync(path.dirname(csvDir), { recursive: true });
+    }
+
+    // 제출한 csv 받아서 저장하기
+    const fileData = Buffer.from(await file.arrayBuffer());
+    fs.writeFileSync(answerFilePath, fileData);
+
+    // solution csv 경로 설정
+    const solutionFilePath = path.join(csvDir, 'solution.csv');
+    if (!fs.existsSync(solutionFilePath)) {
+      return NextResponse.json(
+        { error: 'Solution file not found' },
+        { status: 500 },
+      );
+    }
+    const solutionContent = await fs.readFileSync(solutionFilePath, 'utf-8');
+    const solutionLines = solutionContent
+      .split(/\r?\n/)
+      .filter((line: string) => line.trim() !== ''); // type string으로 지정
+
+    // solution.csv 파싱
+    const solutionMap: Record<
+      string,
+      { solution: string; isPrivate: boolean }
+    > = {};
+    for (let i = 1; i < solutionLines.length; i++) {
+      // 첫 번째 라인은 헤더
+      const [solId, solution, priv] = solutionLines[i].split(/\t|,/); // 탭 또는 콤마 구분
+      if (solId && solution && priv !== undefined) {
+        solutionMap[solId.trim()] = {
+          solution: solution.trim(),
+          isPrivate: priv.trim() === '1',
+        };
+      }
+    }
+
+    // 제출한 csv 읽기
+    const answerContent = await fs.readFileSync(answerFilePath, 'utf-8');
+    const answerLines = answerContent
+      .split(/\r?\n/)
+      .filter((line: string) => line.trim() !== '');
+
+    console.info(solutionLines);
+    console.info(answerLines);
+
+    // 점수 계산
+    let correctPublic = 0;
+    let totalPublic = 0;
+    let correctPrivate = 0;
+    let totalPrivate = 0;
+
+    for (let i = 1; i < answerLines.length; i++) {
+      // 첫 번째 라인은 헤더
+      const [ansId, answer] = answerLines[i].split(/\t|,/); // 탭 또는 콤마 구분
+      if (ansId && answer && solutionMap[ansId.trim()]) {
+        const sol = solutionMap[ansId.trim()];
+        if (sol.isPrivate) {
+          totalPrivate += 1;
+          if (answer.trim() === sol.solution) {
+            correctPrivate += 1;
+          }
+        } else {
+          totalPublic += 1;
+          if (answer.trim() === sol.solution) {
+            correctPublic += 1;
+          }
+        }
+      }
+    }
+
+    // 점수 계산
+    const public_score = totalPublic > 0 ? correctPublic / totalPublic : 0;
+    const private_score = totalPrivate > 0 ? correctPrivate / totalPrivate : 0;
+
     // 동일 사용자의 제출 내역 확인
     const existingSubmits = await prisma.submits.findMany({
       where: {
-        user_id: user_id,
+        user_id: parseInt(id as string, 10),
       },
     });
 
@@ -32,14 +126,22 @@ export async function POST(request: NextRequest) {
     const submit = await prisma.submits.create({
       data: {
         filename,
-        user_id,
-        selected: isFirstSubmission ? true : (selected ?? false),
+        user_id: parseInt(id as string, 10),
+        selected: isFirstSubmission,
         private_score,
         public_score,
       },
     });
 
-    return NextResponse.json(submit, {
+    const response = {
+      id: submit.id,
+      filename: submit.filename,
+      user_id: submit.user_id,
+      selected: submit.selected,
+      public_score: submit.public_score, // public_score만 포함
+    };
+
+    return NextResponse.json(response, {
       status: 201,
     });
   } catch (error: unknown) {
@@ -108,10 +210,7 @@ export async function PATCH(request: NextRequest) {
       });
     });
 
-    return NextResponse.json(
-      { message: 'Selection updated successfully', user: updatedSubmit },
-      { status: 200 },
-    );
+    return NextResponse.json(updatedSubmit, { status: 201 });
   } catch (error: unknown) {
     console.log(JSON.stringify(error));
 
@@ -135,13 +234,32 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const submits = await prisma.submits.findMany({
-      where: {
-        user_id: parseInt(userId),
-      },
-    });
+    const session = await auth();
+    console.log('login user info: ', session);
 
-    return NextResponse.json(submits, { status: 200 });
+    // 로그인되지 않았을 때
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 },
+      );
+    }
+
+    // 로그인한 유저가 관리자일 때
+    if (session?.user.role === 'ADMIN') {
+      const response = await prisma.submits.findMany();
+      return NextResponse.json(response, { status: 200 });
+    } else {
+      // 로그인한 유저가 일반유저(TEAM)일 때
+      const response = await prisma.submits.findMany({
+        where: {
+          user_id: parseInt(userId),
+        },
+      });
+      return NextResponse.json(response, { status: 200 });
+    }
   } catch (error: unknown) {
     console.log(JSON.stringify(error));
 
