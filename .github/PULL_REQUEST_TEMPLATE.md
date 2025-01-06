@@ -9,6 +9,7 @@ close #Number
 > 도메인: 관련 URL(Frontend), API 주소(BackEnd), Schema 등
 
 ### 도메인: `/find`
+
 - 수정 내용 1
 - 수정 내용 2
 - 수정 내용 3
