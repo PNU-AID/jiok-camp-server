@@ -18,5 +18,6 @@ export interface PatchCsvReq {
 }
 
 export interface GetCsvReq {
+  [key: string]: any;
   userId: number;
 }
