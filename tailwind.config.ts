@@ -8,9 +8,24 @@ export default {
   ],
   theme: {
     extend: {
+      borderWidth: {
+        '0.5': '0.5px',
+      },
       colors: {
-        background: 'var(--background)',
-        foreground: 'var(--foreground)',
+        'aid-blue': '#237feb',
+        'aid-green': '#16A34A',
+        'aid-red': '#dc4430',
+        'aid-yellow': '#dcae30',
+        'line-gray': '#7b7b7b',
+      },
+      fontFamily: {
+        baloo: ['var(--Baloo)'],
+      },
+      screens: {
+        xl: { max: '1279px' },
+        lg: { max: '1023px' },
+        md: { max: '767px' },
+        sm: { max: '576px' },
       },
     },
   },

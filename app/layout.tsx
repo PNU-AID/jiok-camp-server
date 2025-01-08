@@ -1,16 +1,13 @@
 import type { Metadata } from 'next';
-import { Geist, Geist_Mono } from 'next/font/google';
+import { Baloo_Bhai_2, Noto_Sans_KR } from 'next/font/google';
 import './globals.css';
 import Provider from '@/app/Provider';
+import Navi from '@/components/Navi';
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const notoSansKr = Noto_Sans_KR({ subsets: ['latin'] });
+const balooBhai = Baloo_Bhai_2({
   subsets: ['latin'],
-});
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: '--Baloo',
 });
 
 export const metadata: Metadata = {
@@ -26,9 +23,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${notoSansKr.className} ${balooBhai.variable} antialiased`}
       >
-        <Provider>{children}</Provider>
+        <Provider>
+          <Navi />
+          <main className="m-auto mt-20 w-[800px] md:mt-16">{children}</main>
+        </Provider>
       </body>
     </html>
   );
