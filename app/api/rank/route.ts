@@ -8,27 +8,14 @@ export async function GET() {
     const session = await auth();
     console.log('login user info: ', session);
 
-    // 로그인되지 않았을 때
-    if (!session?.user) {
-      return NextResponse.json(
-        {
-          message: '로그인이 필요합니다.',
-        },
-        { status: 401 },
-      );
-    }
-
     // 로그인한 유저가 관리자일 때
     if (session?.user.role === 'ADMIN') {
       const submits = await prisma.submits.findMany({
         where: {
           selected: true,
         },
-        select: {
-          id: true,
-          filename: true,
-          selected: true,
-          private_score: true,
+        orderBy: {
+          private_score: 'desc',
         },
       });
       return NextResponse.json(submits, { status: 200 });
@@ -49,17 +36,27 @@ export async function GET() {
         },
         select: {
           id: true,
-          filename: true,
           selected: true,
           public_score: true,
           private_score: isPrivate,
+          user: {
+            select: {
+              login_id: true,
+            },
+          },
         },
         orderBy: {
           [orderingField]: 'desc', // 동적으로 정렬 필드 설정
         },
       });
 
-      return NextResponse.json(submits, { status: 200 });
+      const processedResponse = submits.map((submit) => ({
+        ...submit,
+        login_id: submit.user.login_id,
+        user: undefined, // user 객체 제거
+      }));
+
+      return NextResponse.json(processedResponse, { status: 200 });
     }
   } catch (error: unknown) {
     console.error('Error fetching submit:', error);

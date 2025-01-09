@@ -164,7 +164,17 @@ export async function PATCH(request: NextRequest) {
   try {
     const body = await request.json();
     const { id } = body;
+    const session = await auth();
 
+    // 로그인되지 않았을 때
+    if (!session?.user) {
+      return NextResponse.json(
+        {
+          message: '로그인이 필요합니다.',
+        },
+        { status: 401 },
+      );
+    }
     if (!id) {
       return NextResponse.json(
         { error: 'User ID is not found.' },
@@ -188,6 +198,14 @@ export async function PATCH(request: NextRequest) {
 
     const userId = submit.user_id;
 
+    // 자신의 csv만 선택할 수 있도록 함
+    if (parseInt(session?.user.id) !== userId) {
+      return NextResponse.json(
+        { error: '자신의 csv만 선택할 수 있습니다.' },
+        { status: 401 },
+      );
+    }
+
     // user_id가 true인 것은 모두 false로, 지정한 건 true로
     const updatedSubmit = await prisma.$transaction(async (prisma) => {
       await prisma.submits.updateMany({
@@ -206,6 +224,12 @@ export async function PATCH(request: NextRequest) {
         },
         data: {
           selected: true,
+        },
+        select: {
+          id: true,
+          filename: true,
+          selected: true,
+          public_score: true,
         },
       });
     });
@@ -226,6 +250,8 @@ export async function GET(request: NextRequest) {
   try {
     const params = request.nextUrl.searchParams;
     const userId = params.get('userId');
+    const session = await auth();
+    console.log('login user info: ', session);
 
     if (!userId) {
       return NextResponse.json(
@@ -233,9 +259,6 @@ export async function GET(request: NextRequest) {
         { status: 400 }, // 잘못된 요청 상태 코드 반환
       );
     }
-
-    const session = await auth();
-    console.log('login user info: ', session);
 
     // 로그인되지 않았을 때
     if (!session?.user) {
@@ -249,13 +272,42 @@ export async function GET(request: NextRequest) {
 
     // 로그인한 유저가 관리자일 때
     if (session?.user.role === 'ADMIN') {
-      const response = await prisma.submits.findMany();
-      return NextResponse.json(response, { status: 200 });
+      const response = await prisma.submits.findMany({
+        include: {
+          user: {
+            select: {
+              login_id: true,
+            },
+          },
+        },
+      });
+
+      const processedResponse = response.map((submit) => ({
+        ...submit,
+        login_id: submit.user.login_id,
+        user: undefined, // user 객체 제거
+      }));
+
+      return NextResponse.json(processedResponse, { status: 200 });
     } else {
       // 로그인한 유저가 일반유저(TEAM)일 때
+      // 자신의 csv만 불러올 수 있도록 함
+      if (session?.user.id !== userId) {
+        return NextResponse.json(
+          { error: '자신의 csv만 불러올 수 있습니다.' },
+          { status: 401 },
+        );
+      }
+
       const response = await prisma.submits.findMany({
         where: {
           user_id: parseInt(userId),
+        },
+        select: {
+          id: true,
+          filename: true,
+          selected: true,
+          public_score: true,
         },
       });
       return NextResponse.json(response, { status: 200 });
