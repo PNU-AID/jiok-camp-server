@@ -49,6 +49,7 @@ export async function getTeam() {
 
   if (res.ok) {
     const data: GetTeamRes = await res.json();
+    data.sort((a, b) => a.id - b.id);
     return data;
   } else if (res.status < 500) {
     const err = await res.json();
