@@ -52,6 +52,7 @@ export async function getCsv(params: GetCsvReq) {
 
   if (res.ok) {
     const data: GetCsvRes = await res.json();
+    data.sort((a, b) => b.id - a.id);
     return data;
   } else if (res.status < 500) {
     const err = await res.json();

@@ -16,12 +16,9 @@ export default function Rank(props: { user: UserInfo | undefined }) {
     };
 
     rankFetcher();
-  }, []);
+  }, [props.user]);
 
   const nowDate = new Date();
-
-  console.log(ScoreOpenDate);
-  console.log(nowDate);
 
   return (
     <div className="flex w-full flex-col gap-2.5">
@@ -52,7 +49,7 @@ export default function Rank(props: { user: UserInfo | undefined }) {
                       {row.login_id ?? `team${index + 1}`}
                     </h3>
                     <h3 className="w-32 text-center">
-                      {row.public_score.toFixed(3)}
+                      {(row.public_score ?? 0).toFixed(3)}
                     </h3>
                     {nowDate >= ScoreOpenDate ||
                     (props.user && props.user.role === 'ADMIN') ? (

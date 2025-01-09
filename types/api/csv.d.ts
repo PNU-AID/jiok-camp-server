@@ -5,6 +5,7 @@ export interface CsvData {
   selected: boolean;
   public_score: number;
   private_score?: number;
+  login_id: string;
 }
 
 export interface PostCsvRes extends CsvData {}
@@ -18,6 +19,6 @@ export interface PatchCsvReq {
 }
 
 export interface GetCsvReq {
-  [key: string]: any;
-  userId: number;
+  [key: string]: string;
+  userId: string;
 }
