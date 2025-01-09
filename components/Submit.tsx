@@ -3,10 +3,19 @@
 import { getCsv, patchCsv, postCsv } from '@/apis/csv';
 import { GetCsvRes } from '@/types/api/csv';
 import { UserInfo } from '@/types/next-auth';
-import { ChangeEvent, useEffect, useState } from 'react';
+import {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react';
 
-export default function Submit(props: { user: UserInfo | undefined }) {
-  const [refresh, setRefesh] = useState<number>(0);
+export default function Submit(props: {
+  user: UserInfo | undefined;
+  refresh: number;
+  setRefresh: Dispatch<SetStateAction<number>>;
+}) {
   const [data, setData] = useState<GetCsvRes>([]);
   const [highScore, setHighScore] = useState({ id: 0, score: 0 });
 
@@ -16,28 +25,16 @@ export default function Submit(props: { user: UserInfo | undefined }) {
     const formData = new FormData();
     formData.append('file', csvFile);
 
-    for (const key of formData.keys()) {
-      console.log('key : ', key);
-    }
-
-    for (const value of formData.values()) {
-      console.log('value : ', value);
-    }
-
     const res = await postCsv(formData);
-    if (res) setRefesh(refresh + 1);
+    if (res) props.setRefresh(props.refresh + 1);
     e.target.value = '';
   };
 
   const csvSelector = async (csvId: number) => {
     const res = await patchCsv({ id: csvId });
-    if (res)
-      setData((prevData) =>
-        prevData.map((csv) => {
-          if (csv.id === csvId) return { ...csv, selected: true };
-          return { ...csv, selected: false };
-        }),
-      );
+    if (res) {
+      props.setRefresh(props.refresh + 1);
+    }
   };
 
   useEffect(() => {
@@ -58,7 +55,7 @@ export default function Submit(props: { user: UserInfo | undefined }) {
     };
 
     csvFetcher();
-  }, [props.user, refresh]);
+  }, [props.user, props.refresh]);
 
   if (props.user === undefined) return undefined;
 

@@ -5,10 +5,12 @@ import Rank from '@/components/Rank';
 import Submit from '@/components/Submit';
 import Team from '@/components/Team';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();
+
+  const [refresh, setRefresh] = useState<number>(0);
 
   useEffect(() => {
     console.log(session);
@@ -21,8 +23,8 @@ export default function Home() {
   return (
     <div className="flex flex-col gap-24 py-12">
       <AidTop user={session?.user} />
-      <Rank user={session?.user} />
-      <Submit user={session?.user} />
+      <Rank user={session?.user} refresh={refresh} setRefresh={setRefresh} />
+      <Submit user={session?.user} refresh={refresh} setRefresh={setRefresh} />
       {session?.user.role === 'ADMIN' ? <Team /> : undefined}
     </div>
   );

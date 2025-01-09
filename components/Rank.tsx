@@ -4,9 +4,13 @@ import { getRank } from '@/apis/rank';
 import { ScoreOpenDate } from '@/constants';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 
-export default function Rank(props: { user: UserInfo | undefined }) {
+export default function Rank(props: {
+  user: UserInfo | undefined;
+  refresh: number;
+  setRefresh: Dispatch<SetStateAction<number>>;
+}) {
   const [data, setData] = useState<GetRankRes>([]);
 
   useEffect(() => {
@@ -16,7 +20,7 @@ export default function Rank(props: { user: UserInfo | undefined }) {
     };
 
     rankFetcher();
-  }, [props.user]);
+  }, [props.user, props.refresh]);
 
   const nowDate = new Date();
 
@@ -41,7 +45,7 @@ export default function Rank(props: { user: UserInfo | undefined }) {
               return (
                 <div
                   key={`rank-${index + 1}-${row.id}`}
-                  className="flex w-full items-center justify-between font-medium"
+                  className={`flex w-full items-center justify-between font-medium ${props.user && row.login_id === props.user.teamname ? 'bg-[#FFEEEE]' : ''}`}
                 >
                   <h3 className="w-20 text-center">{index + 1}</h3>
                   <div className="flex w-4/5 justify-around gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5">
