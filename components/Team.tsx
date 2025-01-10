@@ -6,21 +6,38 @@ import { GetTeamRes } from '@/types/api/team';
 import { useEffect, useState } from 'react';
 
 export default function Team() {
+  const [refresh, setRefresh] = useState<number>(0);
   const [data, setData] = useState<GetTeamRes>([]);
 
   const [popUpData, setPopUpData] = useState<PopUpData | null>(null);
 
   const teamCreateHandler = () => {
     setPopUpData({
-      quesionList: [
-        { question: '팀 이름', inputType: 'text' },
-        { question: '비밀번호', inputType: 'password' },
-        { question: '비밀번호 확인', inputType: 'password' },
-      ],
-      onSubmitHandler: () => {
-        return true;
-      },
-      submitText: '생성',
+      type: 'create',
+    });
+  };
+
+  const teamPasswordHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'password',
+      targetId: id,
+      targetName: teamname,
+    });
+  };
+
+  const teamNameHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'teamname',
+      targetId: id,
+      targetName: teamname,
+    });
+  };
+
+  const deleteHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'delete',
+      targetId: id,
+      targetName: teamname,
     });
   };
 
@@ -33,11 +50,15 @@ export default function Team() {
     };
 
     teamFetcher();
-  }, []);
+  }, [refresh]);
 
   return (
     <div className="relative flex w-full flex-col gap-2.5">
-      <PopUp popUpData={popUpData} setPopUpData={setPopUpData} />
+      <PopUp
+        popUpData={popUpData}
+        setPopUpData={setPopUpData}
+        setRefresh={setRefresh}
+      />
       <div className="flex w-full justify-between">
         <h1 className="text-2xl font-black">TEAM 🐧</h1>
         <button
@@ -63,13 +84,22 @@ export default function Team() {
                   className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-4 font-medium"
                 >
                   <h3 className="w-32 text-center">{row.login_id}</h3>
-                  <button className="w-32 bg-aid-green py-1 text-center text-white">
+                  <button
+                    className="w-32 bg-aid-green py-1 text-center text-white"
+                    onClick={(e) => teamPasswordHandler(row.id, row.login_id)}
+                  >
                     비밀번호 재설정
                   </button>
-                  <button className="w-32 bg-aid-yellow py-1 text-center text-white">
+                  <button
+                    className="w-32 bg-aid-yellow py-1 text-center text-white"
+                    onClick={(e) => teamNameHandler(row.id, row.login_id)}
+                  >
                     팀명 변경
                   </button>
-                  <button className="w-32 bg-aid-red py-1 text-center text-white">
+                  <button
+                    className="w-32 bg-aid-red py-1 text-center text-white"
+                    onClick={(e) => deleteHandler(row.id, row.login_id)}
+                  >
                     팀 삭제
                   </button>
                 </div>
