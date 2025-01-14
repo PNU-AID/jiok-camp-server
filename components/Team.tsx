@@ -1,42 +1,70 @@
 'use client';
 
-import { useState } from 'react';
+import { getTeam } from '@/apis/team';
+import PopUp, { PopUpData } from '@/components/PopUp';
+import { GetTeamRes } from '@/types/api/team';
+import { useEffect, useState } from 'react';
 
 export default function Team() {
-  const [data, setData] = useState([
-    {
-      id: 1,
-      login_id: 'team1',
-    },
-    {
-      id: 2,
-      login_id: 'team2',
-    },
-    {
-      id: 3,
-      login_id: 'team3',
-    },
-    {
-      id: 4,
-      login_id: 'team4',
-    },
-    {
-      id: 5,
-      login_id: 'team5',
-    },
-    {
-      id: 6,
-      login_id: 'team6',
-    },
-  ]);
+  const [refresh, setRefresh] = useState<number>(0);
+  const [data, setData] = useState<GetTeamRes>([]);
 
-  const [submitSelection, setSubmitSelection] = useState<number>(0);
+  const [popUpData, setPopUpData] = useState<PopUpData | null>(null);
+
+  const teamCreateHandler = () => {
+    setPopUpData({
+      type: 'create',
+    });
+  };
+
+  const teamPasswordHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'password',
+      targetId: id,
+      targetName: teamname,
+    });
+  };
+
+  const teamNameHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'teamname',
+      targetId: id,
+      targetName: teamname,
+    });
+  };
+
+  const deleteHandler = (id: number, teamname: string) => {
+    setPopUpData({
+      type: 'delete',
+      targetId: id,
+      targetName: teamname,
+    });
+  };
+
+  useEffect(() => {
+    const teamFetcher = async () => {
+      const data = await getTeam();
+      if (data) {
+        setData(data);
+      }
+    };
+
+    teamFetcher();
+  }, [refresh]);
 
   return (
-    <div className="flex w-full flex-col gap-2.5">
+    <div className="relative flex w-full flex-col gap-2.5">
+      <PopUp
+        popUpData={popUpData}
+        setPopUpData={setPopUpData}
+        setRefresh={setRefresh}
+      />
       <div className="flex w-full justify-between">
         <h1 className="text-2xl font-black">TEAM 🐧</h1>
-        <button className="bg-aid-blue px-5 py-1 font-medium text-white">
+        <button
+          className="bg-aid-blue px-5 py-1 font-medium text-white"
+          onClick={teamCreateHandler}
+        >
           팀 생성하기
         </button>
       </div>
@@ -48,25 +76,40 @@ export default function Team() {
           <h3 className="w-32 text-center">팀 삭제</h3>
         </div>
         <div className="h-80 w-full overflow-y-scroll">
-          {data.map((row, index) => {
-            return (
-              <div
-                key={`submit-${index + 1}-${row.id}`}
-                className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-4 font-medium"
-              >
-                <h3 className="w-32 text-center">{row.login_id}</h3>
-                <button className="bg-aid-green w-32 py-1 text-center text-white">
-                  비밀번호 재설정
-                </button>
-                <button className="bg-aid-yellow w-32 py-1 text-center text-white">
-                  팀명 변경
-                </button>
-                <button className="w-32 bg-aid-red py-1 text-center text-white">
-                  팀 삭제
-                </button>
-              </div>
-            );
-          })}
+          {data.length ? (
+            data.map((row, index) => {
+              return (
+                <div
+                  key={`submit-${index + 1}-${row.id}`}
+                  className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-4 font-medium"
+                >
+                  <h3 className="w-32 text-center">{row.login_id}</h3>
+                  <button
+                    className="w-32 bg-aid-green py-1 text-center text-white"
+                    onClick={(e) => teamPasswordHandler(row.id, row.login_id)}
+                  >
+                    비밀번호 재설정
+                  </button>
+                  <button
+                    className="w-32 bg-aid-yellow py-1 text-center text-white"
+                    onClick={(e) => teamNameHandler(row.id, row.login_id)}
+                  >
+                    팀명 변경
+                  </button>
+                  <button
+                    className="w-32 bg-aid-red py-1 text-center text-white"
+                    onClick={(e) => deleteHandler(row.id, row.login_id)}
+                  >
+                    팀 삭제
+                  </button>
+                </div>
+              );
+            })
+          ) : (
+            <h3 className="text-center font-medium">
+              정보를 불러오는 중 입니다...
+            </h3>
+          )}
         </div>
       </div>
     </div>

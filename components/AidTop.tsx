@@ -1,5 +1,6 @@
 'use client';
 
+import { downloadUrl } from '@/constants';
 import { UserInfo } from '@/types/next-auth';
 import { signIn, signOut } from 'next-auth/react';
 import Link from 'next/link';
@@ -49,10 +50,10 @@ export default function AidTop(props: { user: UserInfo | undefined }) {
         {props.user ? (
           <Link
             target="_blank"
-            href="https://aidpnu.notion.site/AID-AI-Developer-11ef0e0d194f8108951efc1bce4b42fc?pvs=74"
+            href={downloadUrl}
             className="bg-aid-blue px-5 py-1 font-medium text-white"
           >
-            학습데이터 & 템플릿코드 다운로드
+            Data & Baseline Code 다운로드
           </Link>
         ) : undefined}
       </div>
