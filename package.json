@@ -9,7 +9,8 @@
     "lint": "next lint",
     "format": "prettier --cache --write .",
     "postinstall": "husky install",
-    "migrate": "npx prisma migrate deploy"
+    "migrate": "npx prisma migrate deploy",
+    "deploy": "pm2 start ecosystem.config.js --env production"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",

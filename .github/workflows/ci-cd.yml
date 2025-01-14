@@ -34,7 +34,7 @@ jobs:
 
       - name: Upload to S3
         run: |
-          aws s3 cp --region ap-northeast-2 ./build.zip s3://mytamra-bucket/build.zip
+          aws s3 cp --region ${{ secrets.AWS_REGION }} ./build.zip s3://${{ secrets.S3_BUCKET_NAME }}/build.zip
 
       - name: Deploy
         run: aws deploy create-deployment
