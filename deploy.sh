@@ -6,4 +6,10 @@ REPOSITORY=/home/ec2-user/deploy
 
 cd $REPOSITORY 
 
+npm install prisma@^6.1.0 --save-dev
+
+npm install @prisma/client@^6.1.0
+
+npm run migrate
+
 npm run deploy
