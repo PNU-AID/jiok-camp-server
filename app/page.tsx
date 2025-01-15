@@ -1,6 +1,7 @@
 'use client';
 
 import AidTop from '@/components/AidTop';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import Rank from '@/components/Rank';
 import Submit from '@/components/Submit';
 import Team from '@/components/Team';
@@ -17,7 +18,7 @@ export default function Home() {
   }, [session]);
 
   // session 로딩 중
-  if (session === undefined) return <div />;
+  if (session === undefined) return <LoadingSpinner />;
 
   // session 로딩 완료, session !== undefined
   return (

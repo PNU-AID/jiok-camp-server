@@ -1,6 +1,7 @@
 'use client';
 
 import { getCsv, patchCsv, postCsv } from '@/apis/csv';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { GetCsvRes } from '@/types/api/csv';
 import { UserInfo } from '@/types/next-auth';
 import {
@@ -18,6 +19,7 @@ export default function Submit(props: {
 }) {
   const [data, setData] = useState<GetCsvRes>([]);
   const [highScore, setHighScore] = useState({ id: 0, score: 0 });
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const csvSubmitHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -50,6 +52,7 @@ export default function Submit(props: {
           });
           setHighScore(newHighScore);
           setData(csvData);
+          setIsLoading(false);
         }
       }
     };
@@ -60,7 +63,7 @@ export default function Submit(props: {
   if (props.user === undefined) return undefined;
 
   return (
-    <div className="flex w-full flex-col gap-2.5">
+    <div className="relative flex w-full flex-col gap-2.5">
       <div className="flex w-full justify-between">
         <h1 className="text-2xl font-black">SUBMIT 📃</h1>
         {props.user.role === 'TEAM' ? (
@@ -143,10 +146,10 @@ export default function Submit(props: {
                 </div>
               );
             })
+          ) : isLoading ? (
+            <LoadingSpinner />
           ) : (
-            <h3 className="text-center font-medium">
-              정보를 불러오는 중 입니다...
-            </h3>
+            <h3 className="text-center font-medium">제출한 기록이 없습니다.</h3>
           )}
         </form>
       </div>

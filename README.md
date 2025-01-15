@@ -16,6 +16,8 @@ npm run dev
 ```
 
 ## 환경변수
+
+- local
 ```bash
 # @/.env
 DATABASE_URL="postgres://username:password!@domain:port/databasename"
@@ -24,4 +26,17 @@ DATABASE_URL="postgres://username:password!@domain:port/databasename"
 # 위 명령어로 새로 발급받아 사용하는 것을 추천
 AUTH_SECRET="JbeFKmocHu/YBitxM9SpYQZNJZOhBsxOhLAwfUV9C48="
 NEXTAUTH_URL="http://localhost:3000"
+AUTH_TRUST_HOST="true"
+```
+
+- realese (배포환경)
+```bash
+# @/.env
+DATABASE_URL="postgres://username:password!@domain:port/databasename"
+# example!! 절대 똑같은 AUTH_SECRET으로 배포하지 마시오.
+# npx auth secret
+# 위 명령어로 새로 발급받아 사용하는 것을 추천
+AUTH_SECRET="JbeFKmocHu/YBitxM9SpYQZNJZOhBsxOhLAwfUV9C48="
+NEXTAUTH_URL="https://your.domain.com"
+AUTH_TRUST_HOST="true"
 ```
