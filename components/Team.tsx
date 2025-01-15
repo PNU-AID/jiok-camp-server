@@ -2,6 +2,7 @@
 
 import { getTeam } from '@/apis/team';
 import PopUp, { PopUpData } from '@/components/PopUp';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { GetTeamRes } from '@/types/api/team';
 import { useEffect, useState } from 'react';
 
@@ -10,6 +11,7 @@ export default function Team() {
   const [data, setData] = useState<GetTeamRes>([]);
 
   const [popUpData, setPopUpData] = useState<PopUpData | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   const teamCreateHandler = () => {
     setPopUpData({
@@ -46,6 +48,7 @@ export default function Team() {
       const data = await getTeam();
       if (data) {
         setData(data);
+        setIsLoading(false);
       }
     };
 
@@ -105,10 +108,10 @@ export default function Team() {
                 </div>
               );
             })
+          ) : isLoading ? (
+            <LoadingSpinner />
           ) : (
-            <h3 className="text-center font-medium">
-              정보를 불러오는 중 입니다...
-            </h3>
+            <h3 className="text-center font-medium">등록된 팀이 없습니다.</h3>
           )}
         </div>
       </div>

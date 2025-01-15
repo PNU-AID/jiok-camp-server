@@ -1,6 +1,7 @@
 'use client';
 
 import { getRank } from '@/apis/rank';
+import LoadingSpinner from '@/components/LoadingSpinner';
 import { ScoreOpenDate } from '@/constants';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
@@ -12,11 +13,15 @@ export default function Rank(props: {
   setRefresh: Dispatch<SetStateAction<number>>;
 }) {
   const [data, setData] = useState<GetRankRes>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     const rankFetcher = async () => {
       const rankData = await getRank();
-      if (rankData) setData(rankData);
+      if (rankData) {
+        setData(rankData);
+        setIsLoading(false);
+      }
     };
 
     rankFetcher();
@@ -25,7 +30,7 @@ export default function Rank(props: {
   const nowDate = new Date();
 
   return (
-    <div className="flex w-full flex-col gap-2.5">
+    <div className="relative flex w-full flex-col gap-2.5">
       <h1 className="text-2xl font-black">RANK👑</h1>
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between font-bold">
@@ -65,10 +70,10 @@ export default function Rank(props: {
                 </div>
               );
             })
+          ) : isLoading ? (
+            <LoadingSpinner />
           ) : (
-            <h3 className="text-center font-medium">
-              정보를 불러오는 중 입니다...
-            </h3>
+            <h3 className="text-center font-medium">제출한 팀이 없습니다.</h3>
           )}
         </div>
       </div>
