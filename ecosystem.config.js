@@ -12,6 +12,7 @@ module.exports = {
       env: {
         NODE_ENV: 'production', // Node.js 환경 설정
       },
+      ignore_watch: ['csv'],
     },
   ],
 };
