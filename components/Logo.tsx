@@ -4,7 +4,7 @@ import Link from 'next/link';
 export default function Logo() {
   return (
     <Link
-      className="font-baloo flex items-center gap-3 text-xl font-black"
+      className="flex items-center gap-3 font-baloo text-xl font-black"
       href="https://pnu-aid.github.io/homepage/"
     >
       <Image

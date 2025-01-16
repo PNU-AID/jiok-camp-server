@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
     const isFirstSubmission = existingSubmits.length === 0;
 
     // 제출 횟수 제한
-    if (existingSubmits.length >= 30) {
+    if (existingSubmits.length > 30) {
       return NextResponse.json(
         { error: 'Number of submissions exceeded' },
         { status: 400 },
