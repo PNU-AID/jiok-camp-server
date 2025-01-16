@@ -24,6 +24,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Invalid file type' }, { status: 400 });
     }
 
+    // 동일 사용자의 제출 내역 확인
+    const existingSubmits = await prisma.submits.findMany({
+      where: {
+        user_id: parseInt(id as string, 10),
+      },
+    });
+
+    // 최초 제출 여부에 따라 selected 값 설정
+    const isFirstSubmission = existingSubmits.length === 0;
+
+    // 제출 횟수 제한
+    if (existingSubmits.length >= 30) {
+      return NextResponse.json(
+        { error: 'Number of submissions exceeded' },
+        { status: 400 },
+      );
+    }
+
     // 파일명 - 시간 설정
     const now = new Date();
     now.setHours(now.getHours() + 9); // UTC 시간 수정
@@ -112,16 +130,6 @@ export async function POST(request: NextRequest) {
     // 점수 계산
     const public_score = totalPublic > 0 ? correctPublic / totalPublic : 0;
     const private_score = totalPrivate > 0 ? correctPrivate / totalPrivate : 0;
-
-    // 동일 사용자의 제출 내역 확인
-    const existingSubmits = await prisma.submits.findMany({
-      where: {
-        user_id: parseInt(id as string, 10),
-      },
-    });
-
-    // 최초 제출 여부에 따라 selected 값 설정
-    const isFirstSubmission = existingSubmits.length === 0;
 
     const submit = await prisma.submits.create({
       data: {
