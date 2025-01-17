@@ -83,21 +83,29 @@ export default function Submit(props: {
     <div className="relative flex w-full flex-col gap-2.5">
       <div className="flex w-full justify-between">
         <h1 className="text-2xl font-black">SUBMIT 📃</h1>
-        {props.user.role === 'TEAM' ? (
-          <div>
-            <label
-              htmlFor="file_id"
-              className="bg-aid-blue px-5 py-1 font-medium text-white"
+        {props.user.role === 'TEAM' && !isLoading ? (
+          <div className="flex items-center gap-4">
+            <p
+              className={`font-medium ${data.length >= 25 ? 'text-red-600' : ''}`}
             >
-              CSV 제출하기
-            </label>
-            <input
-              id="file_id"
-              type="file"
-              accept=".csv"
-              onChange={csvSubmitHandler}
-              className="hidden"
-            />
+              남은 제출 기회: {30 - data.length}
+            </p>
+            <div className="flex">
+              <label
+                htmlFor="file_id"
+                className={`${data.length === 30 ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
+              >
+                CSV 제출하기
+              </label>
+              <input
+                id="file_id"
+                type="file"
+                accept=".csv"
+                onChange={csvSubmitHandler}
+                className="hidden"
+                disabled={data.length === 30}
+              />
+            </div>
           </div>
         ) : undefined}
       </div>
