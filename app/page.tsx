@@ -13,10 +13,6 @@ export default function Home() {
 
   const [refresh, setRefresh] = useState<number>(0);
 
-  useEffect(() => {
-    console.log(session);
-  }, [session]);
-
   // session 로딩 중
   if (session === undefined) return <LoadingSpinner />;
 
