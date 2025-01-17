@@ -1,8 +1,10 @@
 'use client';
 
 import { getRank } from '@/apis/rank';
+import { HelpText } from '@/components/HelpText';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ScoreOpenDate } from '@/constants';
+import dateFormat from '@/libs/dateFormat';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
@@ -14,6 +16,13 @@ export default function Rank(props: {
 }) {
   const [data, setData] = useState<GetRankRes>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const nowDate = new Date();
+
+  const descriptions = [
+    `최종 점수 공개(${dateFormat(ScoreOpenDate)})전까지 Public Score만 공개됩니다.`,
+    `점수 공개일부터 Public 및 Private Score가 공개되며, Private Score를 기준으로 평가됩니다.`,
+  ];
 
   useEffect(() => {
     const rankFetcher = async () => {
@@ -27,11 +36,12 @@ export default function Rank(props: {
     rankFetcher();
   }, [props.user, props.refresh]);
 
-  const nowDate = new Date();
-
   return (
     <div className="relative flex w-full flex-col gap-2.5">
-      <h1 className="text-2xl font-black">RANK👑</h1>
+      <div className="flex items-center gap-2">
+        <h1 className="text-2xl font-black">RANK👑</h1>
+        <HelpText descriptions={descriptions} />
+      </div>
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between font-bold">
           <h3 className="w-20 text-center">Rank</h3>

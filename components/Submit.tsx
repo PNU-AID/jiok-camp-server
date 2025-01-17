@@ -1,6 +1,7 @@
 'use client';
 
 import { getCsv, patchCsv, postCsv } from '@/apis/csv';
+import { HelpText } from '@/components/HelpText';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { GetCsvRes } from '@/types/api/csv';
 import { UserInfo } from '@/types/next-auth';
@@ -20,6 +21,11 @@ export default function Submit(props: {
   const [data, setData] = useState<GetCsvRes>([]);
   const [highScore, setHighScore] = useState({ id: 0, score: 0 });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const descriptions = [
+    'csv는 30번 제출할 수 있으며, 가장 점수가 높은 csv가 빨간색으로 표시됩니다.',
+    '최종 선택된 파일이 Ranking에 노출되니 신중히 선택해주세요 🤗',
+  ];
 
   function formatDateString(dateString: string) {
     // 10자리 문자열인지 확인
@@ -82,7 +88,10 @@ export default function Submit(props: {
   return (
     <div className="relative flex w-full flex-col gap-2.5">
       <div className="flex w-full justify-between">
-        <h1 className="text-2xl font-black">SUBMIT 📃</h1>
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-black">SUBMIT 📃</h1>
+          <HelpText descriptions={descriptions} />
+        </div>
         {props.user.role === 'TEAM' && !isLoading ? (
           <div className="flex items-center gap-4">
             <p
