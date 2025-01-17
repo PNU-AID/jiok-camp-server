@@ -1,6 +1,7 @@
 'use client';
 
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 
 export default function Test() {
   const session = useSession();
@@ -19,8 +20,18 @@ export default function Test() {
         <p>&apos;F12&apos;를 눌러 콘솔창과 함께 화면 전체를</p>
         <p>캡처 후 운영진에게 DM으로 보내주세요</p>
         <img src="https://media.tenor.com/tNfwApVE9RAAAAAM/orange-cat-laughing.gif" />
+        <Link href={'/'} className="text-blue-400">
+          메인페이지로 돌아가기
+        </Link>
       </div>
     );
   }
-  return <div></div>;
+  return (
+    <div>
+      <div>로그인 후 이 페이지로 접속하면 좋은 일이 생길지도..?</div>
+      <Link href={'/'} className="text-blue-400">
+        메인페이지로 돌아가기
+      </Link>
+    </div>
+  );
 }

@@ -21,6 +21,23 @@ export default function Submit(props: {
   const [highScore, setHighScore] = useState({ id: 0, score: 0 });
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  function formatDateString(dateString: string) {
+    // 10자리 문자열인지 확인
+    if (dateString.length !== 10) {
+      return 'Invalid input';
+    }
+
+    // 각각의 값 추출
+    const month = dateString.slice(0, 2);
+    const day = dateString.slice(2, 4);
+    const hour = dateString.slice(4, 6);
+    const minute = dateString.slice(6, 8);
+    const second = dateString.slice(8, 10);
+
+    // 원하는 형식으로 포맷팅
+    return `${month}.${day} ${hour}:${minute}:${second}`;
+  }
+
   const csvSubmitHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const csvFile = e.target.files[0];
@@ -107,7 +124,7 @@ export default function Submit(props: {
                     className={`flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5 font-medium ${row.id === highScore.id ? 'bg-[#FFEEEE]' : ''}`}
                   >
                     <h3 className="w-32 text-center">
-                      {row.filename.split('-')[0]}
+                      {formatDateString(row.filename.split('-')[0].slice(4))}
                     </h3>
                     <h3
                       className={`w-32 text-center ${row.id === highScore.id ? 'text-aid-red' : ''}`}
@@ -132,7 +149,7 @@ export default function Submit(props: {
                   className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5 font-medium"
                 >
                   <h3 className="w-32 text-center">
-                    {row.filename.split('-')[0]}
+                    {formatDateString(row.filename.split('-')[0].slice(4))}
                   </h3>
                   <h3 className="w-32 text-center">
                     {row.login_id ?? `team${row.user_id}`}
