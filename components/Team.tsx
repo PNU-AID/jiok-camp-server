@@ -78,7 +78,7 @@ export default function Team() {
           <h3 className="w-32 text-center">팀명 변경</h3>
           <h3 className="w-32 text-center">팀 삭제</h3>
         </div>
-        <div className="h-80 w-full overflow-y-scroll">
+        <div className="w-full">
           {data.length ? (
             data.map((row, index) => {
               return (

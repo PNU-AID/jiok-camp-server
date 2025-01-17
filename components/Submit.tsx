@@ -131,7 +131,7 @@ export default function Submit(props: {
             <h3 className="w-32 text-center">최종선택</h3>
           )}
         </div>
-        <form className="h-80 w-full overflow-y-scroll">
+        <form className="h-[290px] w-full overflow-y-scroll shadow-inner">
           {data.length ? (
             data.map((row, index) => {
               if (props.user?.role === 'TEAM')

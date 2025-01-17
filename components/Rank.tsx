@@ -54,7 +54,7 @@ export default function Rank(props: {
             ) : undefined}
           </div>
         </div>
-        <div className="h-80 w-full overflow-y-scroll">
+        <div className="w-full">
           {data.length ? (
             data.map((row, index) => {
               return (
