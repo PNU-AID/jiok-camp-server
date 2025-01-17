@@ -1,6 +1,7 @@
 'use client';
 
 import { getCsv, patchCsv, postCsv } from '@/apis/csv';
+import { HelpText } from '@/components/HelpText';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { GetCsvRes } from '@/types/api/csv';
 import { UserInfo } from '@/types/next-auth';
@@ -20,6 +21,28 @@ export default function Submit(props: {
   const [data, setData] = useState<GetCsvRes>([]);
   const [highScore, setHighScore] = useState({ id: 0, score: 0 });
   const [isLoading, setIsLoading] = useState<boolean>(true);
+
+  const descriptions = [
+    'csv는 30번 제출할 수 있으며, 가장 점수가 높은 csv가 빨간색으로 표시됩니다.',
+    '최종 선택된 파일이 Ranking에 노출되니 신중히 선택해주세요 🤗',
+  ];
+
+  function formatDateString(dateString: string) {
+    // 10자리 문자열인지 확인
+    if (dateString.length !== 10) {
+      return 'Invalid input';
+    }
+
+    // 각각의 값 추출
+    const month = dateString.slice(0, 2);
+    const day = dateString.slice(2, 4);
+    const hour = dateString.slice(4, 6);
+    const minute = dateString.slice(6, 8);
+    const second = dateString.slice(8, 10);
+
+    // 원하는 형식으로 포맷팅
+    return `${month}.${day} ${hour}:${minute}:${second}`;
+  }
 
   const csvSubmitHandler = async (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
@@ -65,22 +88,33 @@ export default function Submit(props: {
   return (
     <div className="relative flex w-full flex-col gap-2.5">
       <div className="flex w-full justify-between">
-        <h1 className="text-2xl font-black">SUBMIT 📃</h1>
-        {props.user.role === 'TEAM' ? (
-          <div>
-            <label
-              htmlFor="file_id"
-              className="bg-aid-blue px-5 py-1 font-medium text-white"
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-black">SUBMIT 📃</h1>
+          <HelpText descriptions={descriptions} />
+        </div>
+        {props.user.role === 'TEAM' && !isLoading ? (
+          <div className="flex items-center gap-4">
+            <p
+              className={`font-medium ${data.length >= 25 ? 'text-red-600' : ''}`}
             >
-              CSV 제출하기
-            </label>
-            <input
-              id="file_id"
-              type="file"
-              accept=".csv"
-              onChange={csvSubmitHandler}
-              className="hidden"
-            />
+              남은 제출 기회: {30 - data.length}
+            </p>
+            <div className="flex">
+              <label
+                htmlFor="file_id"
+                className={`${data.length === 30 ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
+              >
+                CSV 제출하기
+              </label>
+              <input
+                id="file_id"
+                type="file"
+                accept=".csv"
+                onChange={csvSubmitHandler}
+                className="hidden"
+                disabled={data.length === 30}
+              />
+            </div>
           </div>
         ) : undefined}
       </div>
@@ -97,7 +131,7 @@ export default function Submit(props: {
             <h3 className="w-32 text-center">최종선택</h3>
           )}
         </div>
-        <form className="h-80 w-full overflow-y-scroll">
+        <form className="h-[290px] w-full overflow-y-scroll shadow-inner">
           {data.length ? (
             data.map((row, index) => {
               if (props.user?.role === 'TEAM')
@@ -107,7 +141,7 @@ export default function Submit(props: {
                     className={`flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5 font-medium ${row.id === highScore.id ? 'bg-[#FFEEEE]' : ''}`}
                   >
                     <h3 className="w-32 text-center">
-                      {row.filename.split('-')[0]}
+                      {formatDateString(row.filename.split('-')[0].slice(4))}
                     </h3>
                     <h3
                       className={`w-32 text-center ${row.id === highScore.id ? 'text-aid-red' : ''}`}
@@ -132,7 +166,7 @@ export default function Submit(props: {
                   className="flex w-full items-center justify-between gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5 font-medium"
                 >
                   <h3 className="w-32 text-center">
-                    {row.filename.split('-')[0]}
+                    {formatDateString(row.filename.split('-')[0].slice(4))}
                   </h3>
                   <h3 className="w-32 text-center">
                     {row.login_id ?? `team${row.user_id}`}
