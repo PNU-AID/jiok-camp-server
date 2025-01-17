@@ -102,7 +102,7 @@ export default function Submit(props: {
             <div className="flex">
               <label
                 htmlFor="file_id"
-                className={`${data.length === 30 ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
+                className={`${data.length >= 30 ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
               >
                 CSV 제출하기
               </label>
@@ -112,7 +112,7 @@ export default function Submit(props: {
                 accept=".csv"
                 onChange={csvSubmitHandler}
                 className="hidden"
-                disabled={data.length === 30}
+                disabled={data.length >= 30}
               />
             </div>
           </div>
