@@ -16,9 +16,11 @@ export default function Test() {
 
     return (
       <div>
+        <p>축하합니다!</p>
         <p>이 페이지를 발견하셨다면</p>
         <p>&apos;F12&apos;를 눌러 콘솔창과 함께 화면 전체를</p>
         <p>캡처 후 운영진에게 DM으로 보내주세요</p>
+        <p>소정의 상품을 드립니다 🤗</p>
         <img src="https://media.tenor.com/tNfwApVE9RAAAAAM/orange-cat-laughing.gif" />
         <Link href={'/'} className="text-blue-400">
           메인페이지로 돌아가기

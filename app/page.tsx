@@ -6,7 +6,7 @@ import Rank from '@/components/Rank';
 import Submit from '@/components/Submit';
 import Team from '@/components/Team';
 import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();

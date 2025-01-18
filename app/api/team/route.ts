@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 // Read Teams
 export async function GET() {
   const session = await auth();
-  console.log('login user info: ', session);
+
   try {
     // 로그인되지 않았을 때
     if (!session?.user) {
