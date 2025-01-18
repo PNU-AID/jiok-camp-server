@@ -81,9 +81,13 @@ export default function Rank(props: {
               );
             })
           ) : isLoading ? (
-            <LoadingSpinner />
+            <div className="py-2">
+              <LoadingSpinner />
+            </div>
           ) : (
-            <h3 className="text-center font-medium">제출한 팀이 없습니다.</h3>
+            <h3 className="py-5 text-center font-medium">
+              제출한 팀이 없습니다.
+            </h3>
           )}
         </div>
       </div>

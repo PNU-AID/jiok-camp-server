@@ -89,19 +89,19 @@ export default function Team() {
                   <h3 className="w-32 text-center">{row.login_id}</h3>
                   <button
                     className="w-32 bg-aid-green py-1 text-center text-white"
-                    onClick={(e) => teamPasswordHandler(row.id, row.login_id)}
+                    onClick={() => teamPasswordHandler(row.id, row.login_id)}
                   >
                     비밀번호 재설정
                   </button>
                   <button
                     className="w-32 bg-aid-yellow py-1 text-center text-white"
-                    onClick={(e) => teamNameHandler(row.id, row.login_id)}
+                    onClick={() => teamNameHandler(row.id, row.login_id)}
                   >
                     팀명 변경
                   </button>
                   <button
                     className="w-32 bg-aid-red py-1 text-center text-white"
-                    onClick={(e) => deleteHandler(row.id, row.login_id)}
+                    onClick={() => deleteHandler(row.id, row.login_id)}
                   >
                     팀 삭제
                   </button>
@@ -109,9 +109,13 @@ export default function Team() {
               );
             })
           ) : isLoading ? (
-            <LoadingSpinner />
+            <div className="py-2">
+              <LoadingSpinner />
+            </div>
           ) : (
-            <h3 className="text-center font-medium">등록된 팀이 없습니다.</h3>
+            <h3 className="py-5 text-center font-medium">
+              등록된 팀이 없습니다.
+            </h3>
           )}
         </div>
       </div>

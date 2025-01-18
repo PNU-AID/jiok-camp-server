@@ -1,12 +1,15 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { prisma } from '@/prisma/prisma';
 import { auth } from '@/libs/auth';
+import { ScoreOpenDate } from '@/constants';
+
+const referenceDate = ScoreOpenDate; // 기준 날짜 (KST)
+referenceDate.setHours(referenceDate.getHours() + 9);
 
 // Get Ranking
 export async function GET() {
   try {
     const session = await auth();
-    console.log('login user info: ', session);
 
     // 로그인한 유저가 관리자일 때
     if (session?.user.role === 'ADMIN') {
@@ -24,7 +27,6 @@ export async function GET() {
       // 날짜 설정
       const now = new Date();
       now.setHours(now.getHours() + 9); // UTC 시간 수정
-      const referenceDate = new Date('2025-02-24T00:00:00+09:00'); // 기준 날짜 (KST)
 
       const orderingField =
         now < referenceDate ? 'public_score' : 'private_score';

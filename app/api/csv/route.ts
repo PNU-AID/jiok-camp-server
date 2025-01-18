@@ -259,7 +259,6 @@ export async function GET(request: NextRequest) {
     const params = request.nextUrl.searchParams;
     const userId = params.get('userId');
     const session = await auth();
-    console.log('login user info: ', session);
 
     if (!userId) {
       return NextResponse.json(
