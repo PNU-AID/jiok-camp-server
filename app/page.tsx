@@ -19,17 +19,31 @@ export default function Home() {
     setIsMobile(getIsMobile());
   }, []);
 
-  // session 로딩 중
-  if (session === undefined) return <LoadingSpinner />;
-
-  // session 로딩 완료, session !== undefined
   return (
     <div className="flex flex-col gap-24 py-12">
-      {isMobile ? <MobileCaution /> : undefined}
-      <AidTop user={session?.user} />
-      <Rank user={session?.user} refresh={refresh} setRefresh={setRefresh} />
-      <Submit user={session?.user} refresh={refresh} setRefresh={setRefresh} />
-      {session?.user.role === 'ADMIN' ? <Team /> : undefined}
+      {session === undefined ? (
+        // session 로딩 중
+        <div className="h-screen">
+          <LoadingSpinner />
+        </div>
+      ) : (
+        // session 로딩 완료, session !== undefined
+        <>
+          {isMobile ? <MobileCaution /> : undefined}
+          <AidTop user={session?.user} />
+          <Rank
+            user={session?.user}
+            refresh={refresh}
+            setRefresh={setRefresh}
+          />
+          <Submit
+            user={session?.user}
+            refresh={refresh}
+            setRefresh={setRefresh}
+          />
+          {session?.user.role === 'ADMIN' ? <Team /> : undefined}
+        </>
+      )}
     </div>
   );
 }
