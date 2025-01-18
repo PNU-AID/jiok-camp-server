@@ -27,7 +27,9 @@ export default function RootLayout({
       >
         <Provider>
           <Navi />
-          <main className="m-auto mt-20 w-[800px] md:mt-16">{children}</main>
+          <main className="m-auto mt-20 w-[896px] px-12 md:mt-16">
+            {children}
+          </main>
         </Provider>
       </body>
     </html>
