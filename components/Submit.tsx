@@ -154,11 +154,11 @@ export default function Submit(props: {
                     <h3
                       className={`w-32 text-center ${row.id === highScore.id ? 'text-aid-red' : ''}`}
                     >
-                      {row.public_score.toFixed(3)}
+                      {row.public_score.toFixed(4)}
                     </h3>
                     {isScoreOpen && (
                       <h3 className="w-32 text-center">
-                        {(row.private_score ?? 0).toFixed(3)}
+                        {(row.private_score ?? 0).toFixed(4)}
                       </h3>
                     )}
                     <div className="w-32 text-center">
@@ -186,10 +186,10 @@ export default function Submit(props: {
                     {row.login_id ?? `team${row.user_id}`}
                   </h3>
                   <h3 className="w-32 text-center">
-                    {row.public_score.toFixed(3)}
+                    {row.public_score.toFixed(4)}
                   </h3>
                   <h3 className="w-32 text-center">
-                    {(row.private_score ?? 0).toFixed(3)}
+                    {(row.private_score ?? 0).toFixed(4)}
                   </h3>
                 </div>
               );
