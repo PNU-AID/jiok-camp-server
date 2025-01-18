@@ -3,6 +3,7 @@
 import { getCsv, patchCsv, postCsv } from '@/apis/csv';
 import { HelpText } from '@/components/HelpText';
 import LoadingSpinner from '@/components/LoadingSpinner';
+import { ScoreOpenDate } from '@/constants';
 import { GetCsvRes } from '@/types/api/csv';
 import { UserInfo } from '@/types/next-auth';
 import {
@@ -26,6 +27,8 @@ export default function Submit(props: {
     'csv는 30번 제출할 수 있으며, 가장 점수가 높은 csv가 빨간색으로 표시됩니다.',
     '최종 선택된 파일이 Ranking에 노출되니 신중히 선택해주세요 🤗',
   ];
+
+  const isScoreOpen = new Date() > ScoreOpenDate;
 
   function formatDateString(dateString: string) {
     // 10자리 문자열인지 확인
@@ -102,7 +105,7 @@ export default function Submit(props: {
             <div className="flex">
               <label
                 htmlFor="file_id"
-                className={`${data.length >= 30 ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
+                className={`${data.length >= 30 || isScoreOpen ? 'bg-gray-400' : 'bg-aid-blue'} cursor-pointer px-5 py-1 font-medium text-white`}
               >
                 CSV 제출하기
               </label>
@@ -112,7 +115,7 @@ export default function Submit(props: {
                 accept=".csv"
                 onChange={csvSubmitHandler}
                 className="hidden"
-                disabled={data.length >= 30}
+                disabled={data.length >= 30 || isScoreOpen}
               />
             </div>
           </div>
@@ -128,7 +131,12 @@ export default function Submit(props: {
           {props.user.role === 'ADMIN' ? (
             <h3 className="w-32 text-center">Private Score</h3>
           ) : (
-            <h3 className="w-32 text-center">최종선택</h3>
+            <>
+              {isScoreOpen && (
+                <h3 className="w-32 text-center">Private Score</h3>
+              )}
+              <h3 className="w-32 text-center">최종선택</h3>
+            </>
           )}
         </div>
         <form className="h-[290px] w-full overflow-y-scroll shadow-inner">
@@ -148,6 +156,11 @@ export default function Submit(props: {
                     >
                       {row.public_score.toFixed(3)}
                     </h3>
+                    {isScoreOpen && (
+                      <h3 className="w-32 text-center">
+                        {(row.private_score ?? 0).toFixed(3)}
+                      </h3>
+                    )}
                     <div className="w-32 text-center">
                       <input
                         type="radio"
@@ -155,6 +168,7 @@ export default function Submit(props: {
                         value={row.id}
                         checked={row.selected}
                         onChange={(e) => csvSelector(parseInt(e.target.value))}
+                        disabled={isScoreOpen}
                       />
                     </div>
                   </div>
