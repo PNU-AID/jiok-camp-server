@@ -1,2 +1,2 @@
 * text eol=lf
-*.ico -diff
+*.ico binary
