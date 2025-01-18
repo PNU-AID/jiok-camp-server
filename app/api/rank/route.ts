@@ -37,7 +37,6 @@ export async function GET() {
         login_id: submit.user.login_id,
         user: undefined, // user 객체 제거
       }));
-      console.log(processedResponse);
       return NextResponse.json(processedResponse, { status: 200 });
     } else {
       // 로그인한 유저가 일반유저(TEAM)일 때
