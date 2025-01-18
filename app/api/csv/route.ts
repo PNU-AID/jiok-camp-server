@@ -328,6 +328,11 @@ export async function GET(request: NextRequest) {
         );
       }
 
+      // 날짜 설정
+      const now = new Date();
+      now.setHours(now.getHours() + 9); // UTC 시간 수정
+      const isPrivate = now < referenceDate ? false : true;
+
       const response = await prisma.submits.findMany({
         where: {
           user_id: parseInt(userId),
@@ -337,6 +342,7 @@ export async function GET(request: NextRequest) {
           filename: true,
           selected: true,
           public_score: true,
+          private_score: isPrivate,
         },
       });
       return NextResponse.json(response, { status: 200 });
