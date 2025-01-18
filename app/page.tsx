@@ -8,12 +8,16 @@ import Submit from '@/components/Submit';
 import Team from '@/components/Team';
 import getIsMobile from '@/libs/isMobile';
 import { useSession } from 'next-auth/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();
-  const isMobile = getIsMobile();
+  const [isMobile, setIsMobile] = useState<boolean>(false);
   const [refresh, setRefresh] = useState<number>(0);
+
+  useEffect(() => {
+    setIsMobile(getIsMobile());
+  }, []);
 
   // session 로딩 중
   if (session === undefined) return <LoadingSpinner />;

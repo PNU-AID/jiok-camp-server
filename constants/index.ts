@@ -2,3 +2,11 @@ export const ScoreOpenDate = new Date(2025, 0, 24);
 
 export const downloadUrl =
   'https://aidpnu.notion.site/AID-AI-Developer-11ef0e0d194f8108951efc1bce4b42fc?pvs=74';
+
+export const aidUrl = {
+  homepage: 'https://pnu-aid.github.io/homepage/',
+  github: 'https://github.com/PNU-AID',
+  notion:
+    'https://www.notion.so/aidpnu/AID-AI-Developer-11ef0e0d194f8108951efc1bce4b42fc',
+  velog: 'https://velog.io/@aideveloper',
+};
