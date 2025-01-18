@@ -68,12 +68,12 @@ export default function Rank(props: {
                       {row.login_id ?? `team${index + 1}`}
                     </h3>
                     <h3 className="w-32 text-center">
-                      {(row.public_score ?? 0).toFixed(3)}
+                      {(row.public_score ?? 0).toFixed(4)}
                     </h3>
                     {nowDate >= ScoreOpenDate ||
                     (props.user && props.user.role === 'ADMIN') ? (
                       <h3 className="w-32 text-center">
-                        {(row.private_score ?? 0).toFixed(3)}
+                        {(row.private_score ?? 0).toFixed(4)}
                       </h3>
                     ) : undefined}
                   </div>
