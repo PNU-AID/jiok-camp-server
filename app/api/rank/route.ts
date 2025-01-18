@@ -17,11 +17,27 @@ export async function GET() {
         where: {
           selected: true,
         },
+        select: {
+          id: true,
+          selected: true,
+          public_score: true,
+          private_score: true,
+          user: {
+            select: {
+              login_id: true,
+            },
+          },
+        },
         orderBy: {
           private_score: 'desc',
         },
       });
-      return NextResponse.json(submits, { status: 200 });
+      const processedResponse = submits.map((submit) => ({
+        ...submit,
+        login_id: submit.user.login_id,
+        user: undefined, // user 객체 제거
+      }));
+      return NextResponse.json(processedResponse, { status: 200 });
     } else {
       // 로그인한 유저가 일반유저(TEAM)일 때
       // 날짜 설정

@@ -3,6 +3,10 @@ import { prisma } from '@/prisma/prisma';
 import { auth } from '@/libs/auth';
 import fs from 'fs';
 import path from 'path';
+import { ScoreOpenDate } from '@/constants';
+
+const referenceDate = ScoreOpenDate; // 기준 날짜 (KST)
+referenceDate.setHours(referenceDate.getHours() + 9);
 
 // Submit csv
 export async function POST(request: NextRequest) {
@@ -11,6 +15,17 @@ export async function POST(request: NextRequest) {
     const file = formData.get('file'); // CSV 파일
     const session = await auth();
     const id = session?.user.id; // TEXT
+
+    // 날짜 설정
+    const now = new Date();
+    now.setHours(now.getHours() + 9); // UTC 시간 수정
+
+    if (referenceDate < now) {
+      return NextResponse.json(
+        { error: '제출 기한이 지났습니다.' },
+        { status: 400 },
+      );
+    }
 
     if (!file || !id) {
       return NextResponse.json(
@@ -42,9 +57,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 파일명 - 시간 설정
-    const now = new Date();
-    now.setHours(now.getHours() + 9); // UTC 시간 수정
     const timestamp = now
       .toISOString()
       .replace(/[-T:.Z]/g, '')
@@ -190,6 +202,16 @@ export async function PATCH(request: NextRequest) {
       );
     }
 
+    // 날짜 설정
+    const now = new Date();
+    now.setHours(now.getHours() + 9); // UTC 시간 수정
+    if (referenceDate < now) {
+      return NextResponse.json(
+        { error: '제출 기한이 지났습니다.' },
+        { status: 400 },
+      );
+    }
+
     // user_id 구하기
     const submit = await prisma.submits.findUnique({
       where: {
@@ -306,6 +328,11 @@ export async function GET(request: NextRequest) {
         );
       }
 
+      // 날짜 설정
+      const now = new Date();
+      now.setHours(now.getHours() + 9); // UTC 시간 수정
+      const isPrivate = now < referenceDate ? false : true;
+
       const response = await prisma.submits.findMany({
         where: {
           user_id: parseInt(userId),
@@ -315,6 +342,7 @@ export async function GET(request: NextRequest) {
           filename: true,
           selected: true,
           public_score: true,
+          private_score: isPrivate,
         },
       });
       return NextResponse.json(response, { status: 200 });
