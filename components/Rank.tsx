@@ -5,19 +5,36 @@ import { HelpText } from '@/components/HelpText';
 import LoadingSpinner from '@/components/LoadingSpinner';
 import { ScoreOpenDate } from '@/constants';
 import dateFormat from '@/libs/dateFormat';
+import useInterval from '@/libs/useInterval';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+
+function millisecondsToTime(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const remainingSeconds = seconds % 60;
+
+  const paddedHours = String(hours).padStart(2, '0');
+  const paddedMinutes = String(minutes).padStart(2, '0');
+  const paddedSeconds = String(remainingSeconds).padStart(2, '0');
+
+  return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
+}
 
 export default function Rank(props: {
   user: UserInfo | undefined;
   refresh: number;
   setRefresh: Dispatch<SetStateAction<number>>;
 }) {
+  const nowDate = new Date();
+
   const [data, setData] = useState<GetRankRes>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
-
-  const nowDate = new Date();
+  const [timeRemainingMs, setTimeRemainingMs] = useState<number>(
+    ScoreOpenDate.valueOf() - nowDate.valueOf(),
+  );
 
   const descriptions = [
     `최종 점수 공개(${dateFormat(ScoreOpenDate)})전까지 Public Score만 공개됩니다.`,
@@ -36,11 +53,25 @@ export default function Rank(props: {
     rankFetcher();
   }, [props.user, props.refresh]);
 
+  useInterval(() => {
+    setTimeRemainingMs(ScoreOpenDate.valueOf() - new Date().valueOf());
+  }, 1000);
+
   return (
     <div className="relative flex w-full flex-col gap-2.5">
-      <div className="flex items-center gap-2">
-        <h1 className="text-2xl font-black">RANK👑</h1>
-        <HelpText descriptions={descriptions} />
+      <div className="flex w-full justify-between">
+        <div className="flex items-center gap-2">
+          <h1 className="text-2xl font-black">RANK👑</h1>
+          <HelpText descriptions={descriptions} />
+        </div>
+        <div className="flex items-center gap-4">
+          <p
+            className={`font-medium ${timeRemainingMs < 1000 * 60 * 60 * 6 ? 'text-red-600' : ''}`}
+          >
+            Private Score 공개 & 제출 마감까지 -{' '}
+            {millisecondsToTime(timeRemainingMs)}
+          </p>
+        </div>
       </div>
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between font-bold">
