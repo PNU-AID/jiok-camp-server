@@ -64,14 +64,16 @@ export default function Rank(props: {
           <h1 className="text-2xl font-black">RANK👑</h1>
           <HelpText descriptions={descriptions} />
         </div>
-        <div className="flex items-center gap-4">
-          <p
-            className={`font-medium ${timeRemainingMs < 1000 * 60 * 60 * 6 ? 'text-red-600' : ''}`}
-          >
-            Private Score 공개 & 제출 마감까지 -{' '}
-            {millisecondsToTime(timeRemainingMs)}
-          </p>
-        </div>
+        {timeRemainingMs >= 0 && (
+          <div className="flex items-center gap-4">
+            <p
+              className={`font-medium ${timeRemainingMs < 1000 * 60 * 60 * 6 ? 'text-red-600' : ''}`}
+            >
+              Private Score 공개 & 제출 마감까지 -{' '}
+              {millisecondsToTime(timeRemainingMs)}
+            </p>
+          </div>
+        )}
       </div>
       <div className="flex w-full flex-col">
         <div className="flex w-full items-center justify-between font-bold">
