@@ -24,7 +24,7 @@ export async function GET() {
       // 날짜 설정
       const now = new Date();
       now.setHours(now.getHours() + 9); // UTC 시간 수정
-      const referenceDate = new Date('2025-02-24T00:00:00+09:00'); // 기준 날짜 (KST)
+      const referenceDate = new Date('2025-01-24T00:00:00+09:00'); // 기준 날짜 (KST)
 
       const orderingField =
         now < referenceDate ? 'public_score' : 'private_score';
