@@ -6,7 +6,6 @@ import path from 'path';
 import { ScoreOpenDate } from '@/constants';
 
 const referenceDate = ScoreOpenDate; // 기준 날짜 (KST)
-referenceDate.setHours(referenceDate.getHours() + 9);
 
 // Submit csv
 export async function POST(request: NextRequest) {

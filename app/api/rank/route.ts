@@ -4,7 +4,6 @@ import { auth } from '@/libs/auth';
 import { ScoreOpenDate } from '@/constants';
 
 const referenceDate = ScoreOpenDate; // 기준 날짜 (KST)
-referenceDate.setHours(referenceDate.getHours() + 9);
 
 // Get Ranking
 export async function GET() {
@@ -43,7 +42,6 @@ export async function GET() {
       // 날짜 설정
       const now = new Date();
       now.setHours(now.getHours() + 9); // UTC 시간 수정
-      console.log('now', now, 'set', referenceDate);
 
       const orderingField =
         now < referenceDate ? 'public_score' : 'private_score';
@@ -74,7 +72,6 @@ export async function GET() {
         login_id: submit.user.login_id,
         user: undefined, // user 객체 제거
       }));
-      console.log(now < referenceDate, isPrivate);
 
       return NextResponse.json(processedResponse, { status: 200 });
     }
