@@ -43,6 +43,7 @@ export async function GET() {
       // 날짜 설정
       const now = new Date();
       now.setHours(now.getHours() + 9); // UTC 시간 수정
+      console.log(now);
 
       const orderingField =
         now < referenceDate ? 'public_score' : 'private_score';
