@@ -4,13 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:docker": "prisma migrate deploy && next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --cache --write .",
-    "migrate": "npx prisma migrate deploy",
-    "deploy": "pm2 start ecosystem.config.js --env production"
+    "prisma:generate": "npx prisma generate",
+    "prisma:migrate": "npx prisma migrate deploy",
+    "deploy": "pm2 start ecosystem.config.js --env production",
+    "dev:docker": "prisma migrate deploy && next dev",
+    "deploy:docker": "prisma migrate deploy && pm2 start ecosystem.config.js --env production && pm2 logs"
   },
   "dependencies": {
     "@auth/prisma-adapter": "^2.7.4",
