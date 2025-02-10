@@ -11,6 +11,6 @@ export const aidUrl = {
   velog: 'https://velog.io/@aideveloper',
 };
 
-export const camp1BackendUrl = 'http://127.0.0.1:8080';
+export const camp1BackendUrl = process.env.NEXT_PUBLIC_BACKEND_URL ?? '';
 
 export const disableFooterList = ['/camp1'];

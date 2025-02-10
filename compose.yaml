@@ -52,19 +52,28 @@ services:
     build:
       context: ./ai-web-front
       dockerfile: ./dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
     restart: always
     ports:
       - "3000:3000"
-    volumes:
-      - ./ai-web-front:/usr/src/frontend
-      - /usr/src/frontend/node_modules
-      - /usr/src/frontend/.next
+    # dev 시 hot-reload를 위해 필요
+    # volumes:
+    #   - ./ai-web-front:/usr/src/frontend
+    #   - /usr/src/frontend/node_modules
+    #   - /usr/src/frontend/.next
     networks:
       - aiweb-network
     environment:
-      - NODE_ENV=development
-      - CHOKIDAR_USEPOLLING=true
-      - WATCHPACK_POLLING=true
+      # dev, hot-reload를 위해 필요
+      # - NODE_ENV=development
+      # - CHOKIDAR_USEPOLLING=true
+      # - WATCHPACK_POLLING=true
+
+      # prod
+      - NODE_ENV=production
+      - CHOKIDAR_USEPOLLING=false
+      - WATCHPACK_POLLING=false
     env_file: ./.env
     depends_on:
       db:
