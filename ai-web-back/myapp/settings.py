@@ -30,13 +30,15 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+HOST_DOMAIN = os.environ.get('HOST_DOMAIN')
+CLIENT_DOMAIN = os.environ.get('CLIENT_DOMAIN')
+
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', HOST_DOMAIN, CLIENT_DOMAIN]
 
 
 # Application definition
 
 INSTALLED_APPS = [
-    "api.apps.ApiConfig",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,6 +46,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "corsheaders",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -152,12 +155,11 @@ STATIC_URL = "static/"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
-REDIS_USER = os.environ.get('REDIS_USER')
 REDIS_PASSWORD = os.environ.get('REDIS_PASSWORD')
 REDIS_URL = os.environ.get('REDIS_URL')
 
-CELERY_BROKER_URL = f'redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_URL}:6379/0'
-CELERY_RESULT_BACKEND = f'redis://{REDIS_USER}:{REDIS_PASSWORD}@{REDIS_URL}:6379/0'
+CELERY_BROKER_URL = f'redis://:{REDIS_PASSWORD}@{REDIS_URL}:6379/0'
+CELERY_RESULT_BACKEND = f'redis://:{REDIS_PASSWORD}@{REDIS_URL}:6379/0'
 
 CELERY_ALWAYS_EAGER = True
 CELERY_BROKER_URL = CELERY_BROKER_URL
