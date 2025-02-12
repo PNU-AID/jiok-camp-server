@@ -57,11 +57,13 @@ services:
     restart: always
     ports:
       - "3000:3000"
-    # dev 시 hot-reload를 위해 필요
-    # volumes:
-    #   - ./ai-web-front:/usr/src/frontend
-    #   - /usr/src/frontend/node_modules
-    #   - /usr/src/frontend/.next
+    volumes:
+      # 채점에 필요한 csv파일은 호스트와 동기화 되어야 함
+      - ./ai-web-front/csv:/usr/src/frontend/csv
+      # dev, hot-reload를 위해 필요
+      # - ./ai-web-front:/usr/src/frontend
+      # - /usr/src/frontend/node_modules
+      # - /usr/src/frontend/.next
     networks:
       - aiweb-network
     environment:
