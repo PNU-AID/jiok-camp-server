@@ -72,6 +72,8 @@ CORS_ORIGIN_WHITELIST_FROM='https://api.pnu-aid.com'
 CORS_ORIGIN_WHITELIST_TO='https://pnu-aid.com'
 HOST_DOMAIN='api.pnu-aid.com'
 CLIENT_DOMAIN='pnu-aid.com'
+## ec2 환경에서 django와 연결된 대상그룹이 원할하게 동작하는지 체크하기 위해 호스트 등록
+HEALTH_CHECK_HOST='your ec2 private ip or load balencer dns'
 
 # For DB Container
 DATABASES_NAME=your_dbname_for_django
