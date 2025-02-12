@@ -32,9 +32,8 @@ DEBUG = True
 
 HOST_DOMAIN = os.environ.get('HOST_DOMAIN')
 CLIENT_DOMAIN = os.environ.get('CLIENT_DOMAIN')
-HEALTH_CHECK_HOST = os.environ.get('HEALTH_CHECK_HOST')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', HOST_DOMAIN, CLIENT_DOMAIN, HEALTH_CHECK_HOST]
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', HOST_DOMAIN, CLIENT_DOMAIN]
 
 
 # Application definition
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "myapp.middleware.HealthCheckMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.security.SecurityMiddleware",
