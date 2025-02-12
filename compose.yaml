@@ -106,7 +106,7 @@ services:
     networks:
       - aiweb-network
     env_file: ./.env
-    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8080 --noreload"
+    command: sh -c "python3 manage.py migrate --fake && python3 manage.py runserver 0.0.0.0:8080 --noreload"
     depends_on:
       celery:
         condition: service_started
