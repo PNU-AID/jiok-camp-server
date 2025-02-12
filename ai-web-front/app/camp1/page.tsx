@@ -1,10 +1,8 @@
-'use client';
-
 import Camp1Test from '@/components/camp1/Camp1Test';
 
 export default function Camp1() {
   return (
-    <div className="flex h-screen justify-center bg-white pt-[2rem] md:pt-0">
+    <div className="flex h-dvh justify-center bg-white pt-[2rem] md:pt-0">
       <div className="m-auto lg:hidden">
         <div className="flex flex-col items-start gap-2 px-4">
           <h1 className="text-6xl font-black xl:text-5xl">지옥캠프1</h1>
