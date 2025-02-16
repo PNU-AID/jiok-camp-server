@@ -1,3 +1,15 @@
+# 지옥캠프 웹 서버
+
+AID 내부에서 개최하는 지옥캠프 대회의 진행 사이트와 이전 대회의 모델을 시연해볼 수 있는 기능을 가진 웹 프로젝트입니다.
+
+## 기능
+
+- 지옥캠프2 대회 진행 파트
+  - 참가한 팀들이 로그인하여 정답을 제출, 채점된 점수가 랭킹에 반영되어 나타납니다.
+  - 어드민은 팀 계정을 생성, 관리 및 감사가 가능합니다.
+- 지옥캠프1 우수 모델 시연 파트 ([Original Repository](https://github.com/2024-PNU-SW-StudyGroup/Group-11))
+  - 지옥캠프1(맥도날드 리뷰 데이터 별점 예측)의 우수 모델을 웹에서 시연해 볼 수 있도록 개발하였습니다.
+
 ## 요구사항
 
 - Frontend + backend(지옥캠프2 채점) ([package.json](./ai-web-front/package.json))
@@ -84,3 +96,43 @@ DATABASES_PORT=5432
 REDIS_PASSWORD=your_redis_password
 REDIS_URL=redis
 ```
+
+## 프로젝트 구조
+
+### 폴더구조
+
+```bash
+📁.github ─ 📁workflows ─ 📜ci-cd.yml # Github Actions CI/CD
+📁ai-web-back # 지옥캠프1 모델 시연 파트 Django Backend (Django REST API, Torch)
+📁ai-web-front # 프로젝트 전체 Next.js Frontend + 지옥캠프2 대회 파트 Next.js Backend
+📁documents # 프로젝트에 설명에 필요한 문서, 이미지 폴더
+📜.gitignore
+📜appspec.yml # AWS Code Deploy 관련 설정 파일
+🐋compose.yaml # Docker Compose 파일
+📜deploy.sh # AWS Code Deploy 스크립트
+📜README.md
+```
+
+### 프로젝트 흐롬
+
+![프로젝트 흐름](./documents/Web%20Structure.png)
+
+### 시스템 구조
+
+![시스템구조](./documents/System%20Diagram.png)
+
+## 개발 로그
+
+- 2024-2학기
+  - 각 파트 통합
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> Infra
+  - 지옥캠프2 대회 진행 파트
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> FE, PM
+    - <a href='https://github.com/mangsgi'><img src='https://avatars.githubusercontent.com/u/143569418?s=12&v=6' alt='profile image'/> mangsgi</a> BE
+  - 지옥캠프1 우수 모델 시연 파트 ([Original Repository](https://github.com/2024-PNU-SW-StudyGroup/Group-11))
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> PM, Infra
+    - <a href='https://github.com/soheean1370'><img src='https://avatars.githubusercontent.com/u/127065983?s=12&v=6' alt='profile image'/> soheean1370</a> Torch 개발
+    - <a href='https://github.com/hyunsung1221'><img height='12' src='https://avatars.githubusercontent.com/u/138447029?s=12&v=6' alt='profile image'/> hyunsung1221</a> Torch 개발
+    - <a href='https://github.com/JakeFRCSE'><img src='https://avatars.githubusercontent.com/u/162955476?s=12&v=6' alt='profile image'/> JakeFRCSE</a> BE
+    - <a href='https://github.com/sanghunii'><img src='https://avatars.githubusercontent.com/u/152972679?s=12&v=6' alt='profile image'/> sanghunii</a> BE
+    - <a href='https://github.com/Karryun'><img src='https://avatars.githubusercontent.com/u/165464282?s=12&v=6' alt='profile image'/> Karryun</a> FE
