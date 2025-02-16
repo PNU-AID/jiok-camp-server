@@ -125,14 +125,14 @@ REDIS_URL=redis
 
 - 2024-2학기
   - 각 파트 통합
-    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> Infra
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> Infra
   - 지옥캠프2 대회 진행 파트
-    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> FE, PM
-    - <a href='https://github.com/mangsgi'><img src='https://avatars.githubusercontent.com/u/143569418?s=12&v=6' alt='profile image'/> mangsgi</a> BE
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> FE, PM
+    - <a href='https://github.com/mangsgi'><img src='https://avatars.githubusercontent.com/u/143569418?s=12&v=6' alt='profile image'/> 김명석석(mangsgi)</a> BE
   - 지옥캠프1 우수 모델 시연 파트 ([Original Repository](https://github.com/2024-PNU-SW-StudyGroup/Group-11))
-    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> bluelemon61</a> PM, Infra
-    - <a href='https://github.com/soheean1370'><img src='https://avatars.githubusercontent.com/u/127065983?s=12&v=6' alt='profile image'/> soheean1370</a> Torch 개발
-    - <a href='https://github.com/hyunsung1221'><img height='12' src='https://avatars.githubusercontent.com/u/138447029?s=12&v=6' alt='profile image'/> hyunsung1221</a> Torch 개발
-    - <a href='https://github.com/JakeFRCSE'><img src='https://avatars.githubusercontent.com/u/162955476?s=12&v=6' alt='profile image'/> JakeFRCSE</a> BE
-    - <a href='https://github.com/sanghunii'><img src='https://avatars.githubusercontent.com/u/152972679?s=12&v=6' alt='profile image'/> sanghunii</a> BE
-    - <a href='https://github.com/Karryun'><img src='https://avatars.githubusercontent.com/u/165464282?s=12&v=6' alt='profile image'/> Karryun</a> FE
+    - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> PM, Infra
+    - <a href='https://github.com/soheean1370'><img src='https://avatars.githubusercontent.com/u/127065983?s=12&v=6' alt='profile image'/> 안소희(soheean1370)</a> Torch 개발
+    - <a href='https://github.com/hyunsung1221'><img height='12' src='https://avatars.githubusercontent.com/u/138447029?s=12&v=6' alt='profile image'/> 조현성(hyunsung1221)</a> Torch 개발
+    - <a href='https://github.com/JakeFRCSE'><img src='https://avatars.githubusercontent.com/u/162955476?s=12&v=6' alt='profile image'/> 박준혁(JakeFRCSE)</a> BE
+    - <a href='https://github.com/sanghunii'><img src='https://avatars.githubusercontent.com/u/152972679?s=12&v=6' alt='profile image'/> 박상훈(sanghunii)</a> BE
+    - <a href='https://github.com/Karryun'><img src='https://avatars.githubusercontent.com/u/165464282?s=12&v=6' alt='profile image'/> 곽도연(Karryun)</a> FE
