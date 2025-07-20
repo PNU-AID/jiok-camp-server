@@ -13,16 +13,7 @@ type Competition = {
   playButtonUrl: string;
 };
 
-const nowCompetitionData: Competition[] = [
-  {
-    season: 2,
-    time: '2024-2',
-    description: '부산대학교 6공학관 사진으로 층수 분류하기',
-    infoUrl:
-      'https://aidpnu.notion.site/AID-2-179f0e0d194f804b9d88d723427c46b1',
-    playButtonUrl: '',
-  },
-];
+const nowCompetitionData: Competition[] = [];
 
 const nowDescriptions = [
   '대회는 매 기수(1학기) 또는 1년 단위로 개최됩니다.',
@@ -31,6 +22,22 @@ const nowDescriptions = [
 ];
 
 const pastCompetitionData: Competition[] = [
+  {
+    season: 3,
+    time: '2025-1',
+    description: 'PNU x Upstage: Document AI Challenge 2025',
+    infoUrl:
+      'https://aidpnu.notion.site/PNU-x-Upstage-DOCUMENT-AI-CHALLENGE-2025-1f1f0e0d194f804f9a57f9b8a6ac3f24?source=copy_link',
+    playButtonUrl: '',
+  },
+  {
+    season: 2,
+    time: '2024-2',
+    description: '부산대학교 6공학관 사진으로 층수 분류하기',
+    infoUrl:
+      'https://aidpnu.notion.site/AID-2-179f0e0d194f804b9d88d723427c46b1',
+    playButtonUrl: '',
+  },
   {
     season: 1,
     time: '2024-1',
@@ -43,7 +50,7 @@ const pastCompetitionData: Competition[] = [
 
 const pastDescriptions = [
   '대회는 매 기수(1학기) 또는 1년 단위로 개최됩니다.',
-  'ℹ️ 버튼을 누르면 대회 개요 페이지로 이동되며며,',
+  'ℹ️ 버튼을 누르면 대회 개요 페이지로 이동되며,',
   '▶️ 버튼을 누르면 우수 모델을 테스트 해볼 수 있습니다.',
 ];
 
