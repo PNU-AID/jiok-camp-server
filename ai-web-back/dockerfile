@@ -1,0 +1,10 @@
+FROM python:3.11.4
+
+WORKDIR /usr/src/backend
+
+# COPY <local file or directory> <image directory>
+COPY ./pip_requirements.txt ./
+RUN pip install -r pip_requirements.txt
+
+# 소스 코드 복사
+COPY . .

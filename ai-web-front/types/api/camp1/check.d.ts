@@ -1,0 +1,3 @@
+interface GetCheckByIdRes {
+  status: boolean;
+}

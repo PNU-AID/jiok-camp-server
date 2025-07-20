@@ -12,23 +12,10 @@ jobs:
       - name: Checkout source code.
         uses: actions/checkout@v2
 
-      - name: Check Node version
-        run: node -v
-
       - name: Setting .env
         run: |
-          echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" >> .env
-          echo "SHADOW_DATABASE_URL=${{ secrets.SHADOW_DATABASE_URL }}" >> .env
-          echo "AUTH_SECRET=${{ secrets.AUTH_SECRET }}" >> .env
-          echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
-          echo "AUTH_TRUST_HOST=${{ secrets.AUTH_TRUST_HOST }}" >> .env
-          cat .env
-
-      - name: Install Dependencies
-        run: npm install
-
-      - name: Build
-        run: npm run build
+          touch ./.env
+          echo "${{secrets.ENV}}" > ./.env
 
       - name: zip create
         run: zip -qq -r ./build.zip .

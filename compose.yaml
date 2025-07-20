@@ -1,0 +1,118 @@
+services:
+  db:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DATABASES_USER}
+      POSTGRES_PASSWORD: ${DATABASES_PASSWORD}
+      POSTGRES_DB: ${DATABASES_NAME}
+      POSTGRES_HOST_AUTH_METHOD: trust
+    volumes:
+      - ~/apps/postgres:/var/lib/postgresql/data
+    networks:
+      - aiweb-network
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "pg_isready",
+          "-U",
+          "${DATABASES_USER}",
+          "-d",
+          "${DATABASES_NAME}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7
+    container_name: redis
+    restart: always
+    ports:
+      - "6379:6379"
+    command: ["redis-server", "--requirepass", "${REDIS_PASSWORD}"]
+    volumes:
+      - ./redis/data:/data
+    environment:
+      REDIS_HOST_PASSWORD: ${REDIS_PASSWORD}
+    networks:
+      - aiweb-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+
+  front:
+    container_name: frontend-nextjs
+    build:
+      context: ./ai-web-front
+      dockerfile: ./dockerfile
+      args:
+        NEXT_PUBLIC_BACKEND_URL: ${NEXT_PUBLIC_BACKEND_URL}
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      # 채점에 필요한 csv파일은 호스트와 동기화 되어야 함
+      - ./ai-web-front/csv:/usr/src/frontend/csv
+      # dev, hot-reload를 위해 필요
+      # - ./ai-web-front:/usr/src/frontend
+      # - /usr/src/frontend/node_modules
+      # - /usr/src/frontend/.next
+    networks:
+      - aiweb-network
+    environment:
+      # dev, hot-reload를 위해 필요
+      # - NODE_ENV=development
+      # - CHOKIDAR_USEPOLLING=true
+      # - WATCHPACK_POLLING=true
+
+      # prod
+      - NODE_ENV=production
+      - CHOKIDAR_USEPOLLING=false
+      - WATCHPACK_POLLING=false
+    env_file: ./.env
+    depends_on:
+      db:
+        condition: service_healthy
+
+  celery:
+    container_name: celery-worker
+    build:
+      context: ./ai-web-back
+      dockerfile: ./dockerfile
+    restart: always
+    networks:
+      - aiweb-network
+    env_file: ./.env
+    command: celery -A myapp worker -l info --pool threads
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  back:
+    container_name: backend-django
+    build:
+      context: ./ai-web-back
+      dockerfile: ./dockerfile
+    restart: always
+    ports:
+      - "8080:8080"
+    networks:
+      - aiweb-network
+    env_file: ./.env
+    command: sh -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8080 --noreload"
+    depends_on:
+      celery:
+        condition: service_started
+      db:
+        condition: service_healthy
+
+networks:
+  aiweb-network:
+    driver: bridge
