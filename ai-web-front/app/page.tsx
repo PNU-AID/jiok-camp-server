@@ -28,7 +28,7 @@ const pastCompetitionData: Competition[] = [
     description: 'PNU x Upstage: Document AI Challenge 2025',
     infoUrl:
       'https://aidpnu.notion.site/PNU-x-Upstage-DOCUMENT-AI-CHALLENGE-2025-1f1f0e0d194f804f9a57f9b8a6ac3f24?source=copy_link',
-    playButtonUrl: '',
+    playButtonUrl: 'https://github.com/PNU-AID/DAIC-Template',
   },
   {
     season: 2,

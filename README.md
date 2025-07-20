@@ -128,7 +128,7 @@ REDIS_URL=redis
     - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> Infra
   - 지옥캠프2 대회 진행 파트
     - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> FE, PM
-    - <a href='https://github.com/mangsgi'><img src='https://avatars.githubusercontent.com/u/143569418?s=12&v=6' alt='profile image'/> 김명석석(mangsgi)</a> BE
+    - <a href='https://github.com/mangsgi'><img src='https://avatars.githubusercontent.com/u/143569418?s=12&v=6' alt='profile image'/> 김명석(mangsgi)</a> BE
   - 지옥캠프1 우수 모델 시연 파트 ([Original Repository](https://github.com/2024-PNU-SW-StudyGroup/Group-11))
     - <a href='https://github.com/bluelemon61'><img src='https://avatars.githubusercontent.com/u/67902252?s=12&v=6' alt='profile image'/> 이동훈(bluelemon61)</a> PM, Infra
     - <a href='https://github.com/soheean1370'><img src='https://avatars.githubusercontent.com/u/127065983?s=12&v=6' alt='profile image'/> 안소희(soheean1370)</a> Torch 개발
