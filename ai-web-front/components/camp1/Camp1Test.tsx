@@ -9,10 +9,14 @@ import {
 } from '@/hooks/apis/camp1/review';
 import { getCheckById } from '@/hooks/apis/camp1/check';
 import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
 
 type ReviewWithMy = Review & { isMyReview?: boolean; userRatings?: number };
 
 const Camp1Test = () => {
+  const searchParams = useSearchParams();
+  const lang = searchParams.get('lang');
+
   const LOCALSTORAGE_KEY = 'myReview';
   const [reviews, setReviews] = useState<ReviewWithMy[]>([]);
   const [inputText, setInputText] = useState(''); // 입력한 텍스트 상태 관리
@@ -265,13 +269,31 @@ const Camp1Test = () => {
   return (
     <div className={styles.Container}>
       <div className={styles.description_box}>
-        <div className={styles.semi_content}>
-          가장 최근에 다녀왔던 맥도날드의 리뷰를 <strong>영어</strong>로
-          남겨보세요!
-        </div>
-        <div className={styles.semi_content_2}>
-          AI가 당신이 남길 별점을 예측해드립니다.
-        </div>
+        {lang !== null ? (
+          lang === 'EN' ? (
+            <>
+              <div className={styles.semi_content}>
+                Write a review in <strong>English</strong> about the most recent
+                McDonald’s you visited!
+              </div>
+              <div className={styles.semi_content_2}>
+                The AI will predict the star rating you would give.
+              </div>
+            </>
+          ) : (
+            <>
+              <div className={styles.semi_content}>
+                가장 최근에 다녀왔던 맥도날드의 리뷰를 <strong>영어</strong>로
+                남겨보세요!
+              </div>
+              <div className={styles.semi_content_2}>
+                AI가 당신이 남길 별점을 예측해드립니다.
+              </div>
+            </>
+          )
+        ) : (
+          <></>
+        )}
         <div className={styles.rectangle} />
       </div>
 

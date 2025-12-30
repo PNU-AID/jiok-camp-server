@@ -2,6 +2,7 @@
   position: absolute;
   display: flex;
   flex-direction: column;
+  padding: 0 14px;
   width: 100%;
   align-items: center;
   z-index: 5;
