@@ -4,6 +4,8 @@ import './globals.css';
 import Provider from '@/app/Provider';
 import Navi from '@/components/Navi';
 import Footer from '@/components/Footer';
+import { Suspense } from 'react';
+import LoadingPage from '@/components/LoadingPage';
 
 const notoSansKr = Noto_Sans_KR({ subsets: ['latin'] });
 const balooBhai = Baloo_Bhai_2({
@@ -12,8 +14,8 @@ const balooBhai = Baloo_Bhai_2({
 });
 
 export const metadata: Metadata = {
-  title: 'AID 지옥캠프2',
-  description: '부산대학교 인공지능 동아리 AID, 대회 제출 페이지',
+  title: 'AID 지옥캠프',
+  description: '부산대학교 인공지능 동아리 AID, AI 대회 페이지',
 };
 
 export default function RootLayout({
@@ -27,9 +29,11 @@ export default function RootLayout({
         className={`${notoSansKr.className} ${balooBhai.variable} antialiased`}
       >
         <Provider>
-          <Navi />
-          {children}
-          <Footer />
+          <Suspense fallback={<LoadingPage />}>
+            <Navi />
+            {children}
+            <Footer />
+          </Suspense>
         </Provider>
       </body>
     </html>

@@ -8,7 +8,13 @@ import dateFormat from '@/libs/dateFormat';
 import useInterval from '@/libs/useInterval';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+
+interface RankProps {
+  user?: UserInfo;
+  refresh: number;
+  isEng?: boolean;
+}
 
 function millisecondsToTime(ms: number): string {
   const seconds = Math.floor(ms / 1000);
@@ -23,11 +29,7 @@ function millisecondsToTime(ms: number): string {
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
 
-export default function Rank(props: {
-  user: UserInfo | undefined;
-  refresh: number;
-  setRefresh: Dispatch<SetStateAction<number>>;
-}) {
+export default function Rank({ user, refresh, isEng = false }: RankProps) {
   const nowDate = new Date();
 
   const [data, setData] = useState<GetRankRes>([]);
@@ -40,6 +42,12 @@ export default function Rank(props: {
     `최종 점수 공개(${dateFormat(ScoreOpenDate)})전까지 Public Score만 공개됩니다.`,
     `점수 공개일부터 Public 및 Private Score가 공개되며, Private Score를 기준으로 평가됩니다.`,
   ];
+  const descriptionsEng = [
+    `Until the final score announcement on ${dateFormat(ScoreOpenDate)},`,
+    `only the Public Score will be shown.`,
+    `After the announcement, both Public and Private Scores will be disclosed,`,
+    `with final rankings determined by the Private Score.`,
+  ];
 
   useEffect(() => {
     const rankFetcher = async () => {
@@ -51,7 +59,7 @@ export default function Rank(props: {
     };
 
     rankFetcher();
-  }, [props.user, props.refresh]);
+  }, [user, refresh]);
 
   useInterval(() => {
     setTimeRemainingMs(ScoreOpenDate.valueOf() - new Date().valueOf());
@@ -62,15 +70,17 @@ export default function Rank(props: {
       <div className="flex w-full justify-between">
         <div className="flex items-center gap-2">
           <h1 className="text-2xl font-black">RANK👑</h1>
-          <HelpText descriptions={descriptions} />
+          <HelpText descriptions={isEng ? descriptionsEng : descriptions} />
         </div>
         {timeRemainingMs >= 0 && (
           <div className="flex items-center gap-4">
             <p
               className={`font-medium ${timeRemainingMs < 1000 * 60 * 60 * 6 ? 'text-red-600' : ''}`}
             >
-              Private Score 공개 & 제출 마감까지 -{' '}
-              {millisecondsToTime(timeRemainingMs)}
+              {isEng
+                ? 'Until Private Score Release & Submission Deadline'
+                : 'Private Score 공개 & 제출 마감까지'}{' '}
+              - {millisecondsToTime(timeRemainingMs)}
             </p>
           </div>
         )}
@@ -81,8 +91,7 @@ export default function Rank(props: {
           <div className="flex w-4/5 justify-around gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5">
             <h3 className="w-32 text-center">TeamName</h3>
             <h3 className="w-32 text-center">Public Score</h3>
-            {nowDate >= ScoreOpenDate ||
-            (props.user && props.user.role === 'ADMIN') ? (
+            {nowDate >= ScoreOpenDate || (user && user.role === 'ADMIN') ? (
               <h3 className="w-32 text-center">Private Score</h3>
             ) : undefined}
           </div>
@@ -93,7 +102,7 @@ export default function Rank(props: {
               return (
                 <div
                   key={`rank-${index + 1}-${row.id}`}
-                  className={`flex w-full items-center justify-between font-medium ${props.user && row.login_id === props.user.teamname ? 'bg-[#FFEEEE]' : ''}`}
+                  className={`flex w-full items-center justify-between font-medium ${user && row.login_id === user.teamname ? 'bg-[#FFEEEE]' : ''}`}
                 >
                   <h3 className="w-20 text-center">{index + 1}</h3>
                   <div className="flex w-4/5 justify-around gap-2.5 border-t-0.5 border-line-gray/50 px-8 py-5">
@@ -104,7 +113,7 @@ export default function Rank(props: {
                       {(row.public_score ?? 0).toFixed(4)}
                     </h3>
                     {nowDate >= ScoreOpenDate ||
-                    (props.user && props.user.role === 'ADMIN') ? (
+                    (user && user.role === 'ADMIN') ? (
                       <h3 className="w-32 text-center">
                         {(row.private_score ?? 0).toFixed(4)}
                       </h3>
@@ -119,7 +128,9 @@ export default function Rank(props: {
             </div>
           ) : (
             <h3 className="py-5 text-center font-medium">
-              제출한 팀이 없습니다.
+              {isEng
+                ? 'There are no submissions yet.'
+                : '제출한 팀이 없습니다.'}
             </h3>
           )}
         </div>
