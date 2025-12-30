@@ -40,12 +40,7 @@ export default function Camp2() {
           <>
             {isMobile ? <MobileCaution isEng={!isKo} /> : undefined}
             <AidTop user={session?.user} isEng={!isKo} />
-            <Rank
-              user={session?.user}
-              refresh={refresh}
-              setRefresh={setRefresh}
-              isEng={!isKo}
-            />
+            <Rank user={session?.user} refresh={refresh} isEng={!isKo} />
             <Submit
               user={session?.user}
               refresh={refresh}

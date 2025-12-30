@@ -8,12 +8,11 @@ import dateFormat from '@/libs/dateFormat';
 import useInterval from '@/libs/useInterval';
 import { GetRankRes } from '@/types/api/rank';
 import { UserInfo } from '@/types/next-auth';
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface RankProps {
   user?: UserInfo;
   refresh: number;
-  setRefresh: Dispatch<SetStateAction<number>>;
   isEng?: boolean;
 }
 
@@ -30,12 +29,7 @@ function millisecondsToTime(ms: number): string {
   return `${paddedHours}:${paddedMinutes}:${paddedSeconds}`;
 }
 
-export default function Rank({
-  user,
-  refresh,
-  setRefresh,
-  isEng = false,
-}: RankProps) {
+export default function Rank({ user, refresh, isEng = false }: RankProps) {
   const nowDate = new Date();
 
   const [data, setData] = useState<GetRankRes>([]);

@@ -4,6 +4,8 @@ import './globals.css';
 import Provider from '@/app/Provider';
 import Navi from '@/components/Navi';
 import Footer from '@/components/Footer';
+import { Suspense } from 'react';
+import LoadingPage from '@/components/LoadingPage';
 
 const notoSansKr = Noto_Sans_KR({ subsets: ['latin'] });
 const balooBhai = Baloo_Bhai_2({
@@ -27,9 +29,11 @@ export default function RootLayout({
         className={`${notoSansKr.className} ${balooBhai.variable} antialiased`}
       >
         <Provider>
-          <Navi />
-          {children}
-          <Footer />
+          <Suspense fallback={<LoadingPage />}>
+            <Navi />
+            {children}
+            <Footer />
+          </Suspense>
         </Provider>
       </body>
     </html>
