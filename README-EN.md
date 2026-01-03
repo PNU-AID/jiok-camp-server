@@ -120,6 +120,14 @@ REDIS_URL=redis
 ### Project Flow
 
 ![Project Flow](./documents/Web%20Structure.png)
+#### Engish Subtitle
+- In Frontend - Next.js
+  - Landing Page (/)
+  - JiokCamp 2 Competition Management Page (/camp2)
+  - JiokCamp 1 Award-Winning Model Demonstration Page (/camp1)
+- In Worker - Celery
+  - Model inference is executed sequentially, with each task processed one by one
+  - Task queue–based processing to prevent system overload
 
 ### System Architecture
 
