@@ -101,7 +101,7 @@ export default function Home() {
             {nowCompetitionData.map((competition, index) => {
               const playButtonUrl = competition.playButtonUrl.length
                 ? competition.playButtonUrl
-                : `/camp${competition.season}`;
+                : `/camp${competition.season}${lang ? '?lang=' + lang : ''}`;
               return (
                 <div
                   key={`camp-${index}`}
@@ -147,7 +147,7 @@ export default function Home() {
             {pastCompetitionData.map((competition, index) => {
               const playButtonUrl = competition.playButtonUrl.length
                 ? competition.playButtonUrl
-                : `/camp${competition.season}`;
+                : `/camp${competition.season}${lang ? '?lang=' + lang : ''}`;
               return (
                 <div
                   key={`camp-${index}`}
