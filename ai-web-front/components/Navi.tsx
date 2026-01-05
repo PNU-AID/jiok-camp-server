@@ -2,15 +2,15 @@
 
 import Logo from '@/components/Logo';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 
 type Lang = 'KO' | 'EN';
 
 export default function Navi() {
-  const [lang, setLang] = useState<Lang>('KO');
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
+  const lang = searchParams.get('lang') as Lang | null;
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -23,8 +23,10 @@ export default function Navi() {
   );
 
   useEffect(() => {
-    router.push(pathname + '?' + createQueryString('lang', lang));
-  }, [lang, pathname]);
+    if (lang !== 'KO' && lang !== 'EN') {
+      router.replace(pathname + '?' + createQueryString('lang', 'KO'));
+    }
+  }, [lang]);
 
   return (
     <header className="fixed left-0 right-0 top-0 z-10 m-auto flex items-center justify-center bg-white/70 py-4 shadow backdrop-blur-lg md:py-2">
@@ -39,7 +41,9 @@ export default function Navi() {
             <button
               className={`${lang == 'KO' ? 'font-medium md:hidden' : 'font-light'}`}
               onClick={() => {
-                setLang('KO');
+                router.replace(
+                  pathname + '?' + createQueryString('lang', 'KO'),
+                );
               }}
             >
               한국어
@@ -48,7 +52,9 @@ export default function Navi() {
             <button
               className={` ${lang == 'EN' ? 'font-medium md:hidden' : 'font-light'}`}
               onClick={() => {
-                setLang('EN');
+                router.replace(
+                  pathname + '?' + createQueryString('lang', 'EN'),
+                );
               }}
             >
               ENG
@@ -56,7 +62,9 @@ export default function Navi() {
           </menu>
           <button
             onClick={() => {
-              router.push('/' + '?' + createQueryString('lang', lang));
+              router.push(
+                '/' + (lang ? `?${createQueryString('lang', lang)}` : ''),
+              );
             }}
             className="ml-auto flex items-center space-x-16 text-base font-normal"
           >
